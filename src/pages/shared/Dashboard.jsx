@@ -103,7 +103,7 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* System Activity Monitor */}
-        <div className="lg:col-span-2 card shadow-xl shadow-slate-200/50">
+        <div className="lg:col-span-2 card card-3d shadow-xl shadow-slate-200/50">
           <div className="card-header flex justify-between items-center">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Live Activity Stream</h3>
             {user?.role === 'admin' && (
@@ -153,7 +153,7 @@ const Dashboard = () => {
         </div>
 
         {/* AI Shortcut Card */}
-        <div className="card bg-slate-900 text-white border-none shadow-2xl shadow-slate-900/30 p-8 flex flex-col justify-between relative overflow-hidden group">
+        <div className="card card-3d bg-slate-900 text-white border-none shadow-2xl shadow-slate-900/30 p-8 flex flex-col justify-between relative overflow-hidden group">
           <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary-500/20 rounded-full blur-[80px] group-hover:bg-primary-500/30 transition-all duration-700"></div>
           <div className="relative z-10">
             <div className="w-12 h-12 bg-primary-600/20 rounded-2xl flex items-center justify-center mb-6 border border-primary-600/30">
@@ -194,7 +194,7 @@ const StatCard = ({ title, value, icon: Icon, color, description }) => {
   };
 
   return (
-    <div className={`card p-8 border-transparent hover:border-slate-200 transition-all group ${colors[color]}`}>
+    <div className={`card card-3d p-8 border-transparent hover:border-slate-200 transition-all group ${colors[color]}`}>
       <div className="flex justify-between items-start mb-4">
         <div className={`p-3 rounded-2xl bg-white shadow-sm border border-slate-100 group-hover:scale-110 transition-transform`}>
           <Icon className="w-6 h-6" />
