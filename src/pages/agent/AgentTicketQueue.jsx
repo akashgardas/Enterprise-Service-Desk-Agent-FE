@@ -130,13 +130,13 @@ const AgentTicketQueue = () => {
               </thead>
               <tbody className="divide-y divide-border-color">
                 {filteredTickets.map((ticket) => (
-                  <tr key={ticket.id} className="hover:bg-primary-50/30 transition-colors group">
+                  <tr key={ticket.id} className="hover:bg-blue-50/30 transition-colors group">
                     <td className="px-8 py-6">
                       <div className="flex flex-col">
-                        <span className="font-mono text-[10px] font-bold text-primary-600 bg-primary-50 px-2 py-0.5 rounded border border-primary-100 uppercase w-fit mb-2">
+                        <span className="font-mono text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase w-fit mb-2">
                           {ticket.id}
                         </span>
-                        <span className="font-bold text-text-primary text-base line-clamp-1 group-hover:text-primary-600 transition-colors">{ticket.title}</span>
+                        <span className="font-bold text-text-primary text-base line-clamp-1 group-hover:text-blue-600 transition-colors">{ticket.title}</span>
                         <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mt-1">
                           By {ticket.createdBy} • {ticket.category}
                         </span>
@@ -158,7 +158,7 @@ const AgentTicketQueue = () => {
                     </td>
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-primary-100 flex items-center justify-center text-xs font-extrabold text-primary-700 shadow-sm border border-primary-200">
+                        <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-xs font-extrabold text-blue-700 shadow-sm border border-blue-200">
                           {ticket.assignedTo?.charAt(0) || '?'}
                         </div>
                         <div className="flex flex-col">
@@ -181,7 +181,7 @@ const AgentTicketQueue = () => {
                     <td className="px-8 py-6 text-right">
                       <button 
                         onClick={() => navigate(`/tickets/${ticket.id}`)}
-                        className="p-3 bg-white border border-border-color text-text-secondary rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:border-primary-500 hover:text-primary-600 hover:shadow-lg shadow-sm"
+                        className="p-3 bg-white border border-border-color text-text-secondary rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:border-blue-500 hover:text-blue-600 hover:shadow-lg shadow-sm"
                       >
                         <HiOutlineAdjustmentsHorizontal className="w-6 h-6" />
                       </button>

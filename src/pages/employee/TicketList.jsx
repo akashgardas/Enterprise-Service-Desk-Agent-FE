@@ -52,7 +52,7 @@ const EmployeeTicketList = () => {
         </div>
         <button 
           onClick={() => navigate('/tickets/new')}
-          className="btn-primary flex items-center gap-2 text-lg py-3 px-8 shadow-xl shadow-primary-600/30"
+          className="btn-primary flex items-center gap-2 text-lg py-3 px-8 shadow-xl shadow-blue-600/30"
         >
           <HiOutlinePlus className="w-6 h-6" />
           Create New Ticket
@@ -119,14 +119,14 @@ const EmployeeTicketList = () => {
               </thead>
               <tbody className="divide-y divide-border-color">
                 {filteredTickets.map((ticket) => (
-                  <tr key={ticket.id} className="hover:bg-primary-50/30 transition-colors group">
+                  <tr key={ticket.id} className="hover:bg-blue-50/30 transition-colors group">
                     <td className="px-8 py-6">
-                      <span className="font-mono text-xs font-bold text-primary-600 bg-primary-50 px-2 py-1 rounded-md border border-primary-100 uppercase">
+                      <span className="font-mono text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100 uppercase">
                         {ticket.id}
                       </span>
                     </td>
                     <td className="px-8 py-6">
-                      <div className="font-bold text-text-primary text-base group-hover:text-primary-600 transition-colors line-clamp-1">{ticket.title}</div>
+                      <div className="font-bold text-text-primary text-base group-hover:text-blue-600 transition-colors line-clamp-1">{ticket.title}</div>
                       <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mt-1">{ticket.category}</div>
                     </td>
                     <td className="px-8 py-6">
@@ -154,7 +154,7 @@ const EmployeeTicketList = () => {
                     <td className="px-8 py-6 text-right">
                       <button 
                         onClick={() => navigate(`/tickets/${ticket.id}`)}
-                        className="text-primary-600 font-bold hover:text-primary-700 text-sm hover:underline transition-all"
+                        className="text-blue-600 font-bold hover:text-blue-700 text-sm hover:underline transition-all"
                       >
                         View Details
                       </button>

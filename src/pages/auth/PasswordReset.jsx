@@ -43,12 +43,12 @@ const PasswordReset = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden">
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-100 rounded-full blur-3xl opacity-50"></div>
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-3xl opacity-50"></div>
       
       <div className="w-full max-w-md relative">
         <Link 
           to="/login" 
-          className="flex items-center gap-2 text-slate-500 hover:text-primary-600 font-bold text-sm uppercase tracking-widest mb-8 transition-colors group"
+          className="flex items-center gap-2 text-slate-500 hover:text-blue-600 font-bold text-sm uppercase tracking-widest mb-8 transition-colors group"
         >
           <HiOutlineArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Back to Login

@@ -147,7 +147,7 @@ const CreateTicket = () => {
             <form onSubmit={handleSubmit} className="p-8 space-y-8">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-text-primary uppercase tracking-wider flex items-center gap-2">
-                  <HiOutlineDocumentText className="w-4 h-4 text-primary-500" />
+                  <HiOutlineDocumentText className="w-4 h-4 text-blue-500" />
                   Issue Summary
                 </label>
                 <input 
@@ -215,8 +215,8 @@ const CreateTicket = () => {
                 <div 
                   className={`border-2 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center transition-all cursor-pointer group ${
                     isDragging 
-                      ? 'border-primary-500 bg-primary-50/30 dark:bg-primary-900/10' 
-                      : 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 hover:bg-primary-50/30 hover:border-primary-300 dark:hover:border-primary-700'
+                      ? 'border-blue-500 bg-blue-50/30 dark:bg-blue-900/10' 
+                      : 'border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 hover:bg-blue-50/30 hover:border-blue-300 dark:hover:border-blue-700'
                   }`}
                   onClick={() => document.getElementById('file-upload').click()}
                   onDragOver={handleDragOver}
@@ -232,12 +232,12 @@ const CreateTicket = () => {
                     accept=".png,.jpg,.jpeg,.pdf,.txt"
                   />
                   <div className={`w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border flex items-center justify-center mb-4 transition-transform ${
-                    isDragging ? 'scale-110 border-primary-500' : 'border-slate-200 dark:border-slate-700 group-hover:scale-110'
+                    isDragging ? 'scale-110 border-blue-500' : 'border-slate-200 dark:border-slate-700 group-hover:scale-110'
                   }`}>
-                    <HiOutlinePaperClip className="w-8 h-8 text-primary-500" />
+                    <HiOutlinePaperClip className="w-8 h-8 text-blue-500" />
                   </div>
                   <p className="text-base font-bold text-slate-900 dark:text-white">
-                    Drag & drop files or <span className="text-primary-600 dark:text-primary-400">browse</span>
+                    Drag & drop files or <span className="text-blue-600 dark:text-blue-400">browse</span>
                   </p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 uppercase font-bold tracking-widest">
                     Max 10MB • PNG, JPG, PDF, TXT
@@ -291,7 +291,7 @@ const CreateTicket = () => {
                 <button 
                   type="submit"
                   disabled={loading}
-                  className="btn-primary flex-grow text-lg py-4 shadow-xl shadow-primary-600/30"
+                  className="btn-primary flex-grow text-lg py-4 shadow-xl shadow-blue-600/30"
                 >
                   {loading ? 'Submitting...' : 'Submit Support Request'}
                 </button>
@@ -315,9 +315,9 @@ const CreateTicket = () => {
               Before you submit
             </h3>
             <div className="space-y-4 text-sm text-slate-300">
-              <p>Have you tried searching the <a href="/kb" className="text-primary-400 hover:underline">Knowledge Base</a>? 80% of issues are resolved there instantly.</p>
+              <p>Have you tried searching the <a href="/kb" className="text-blue-400 hover:underline">Knowledge Base</a>? 80% of issues are resolved there instantly.</p>
               <div className="h-px bg-slate-800"></div>
-              <p>Our AI Assistant can often fix connection and password issues in real-time. <a href="/ai" className="text-primary-400 hover:underline">Try Chat</a></p>
+              <p>Our AI Assistant can often fix connection and password issues in real-time. <a href="/ai" className="text-blue-400 hover:underline">Try Chat</a></p>
             </div>
           </div>
 
@@ -333,7 +333,7 @@ const CreateTicket = () => {
                 <p className="text-xs text-slate-500 dark:text-slate-400">Work is severely impacted for you or a small group.</p>
               </div>
               <div className="space-y-1">
-                <p className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase">Medium</p>
+                <p className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Medium</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">Individual productivity is impacted but work can continue.</p>
               </div>
               <div className="space-y-1">

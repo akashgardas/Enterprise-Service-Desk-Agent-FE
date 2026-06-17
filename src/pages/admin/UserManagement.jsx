@@ -51,7 +51,7 @@ const UserManagement = () => {
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">System Administration</h1>
           <p className="text-slate-500 dark:text-slate-300 mt-1 text-lg font-medium">Manage user accounts, permissions, and departmental access.</p>
         </div>
-        <button className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-primary-600/30">
+        <button className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-blue-600/30">
           <HiOutlineUserPlus className="w-6 h-6" />
           Provision New User
         </button>
@@ -105,7 +105,7 @@ const UserManagement = () => {
                 <tr key={user.id} className="table-row group">
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary-600 font-black text-sm border border-slate-200 dark:border-slate-700 shadow-sm group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-all">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-blue-600 font-black text-sm border border-slate-200 dark:border-slate-700 shadow-sm group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
                         {user.name.charAt(0)}
                       </div>
                       <div>
@@ -151,7 +151,7 @@ const UserManagement = () => {
                   </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-primary-600 hover:border-primary-500 rounded-xl transition-all shadow-sm">
+                      <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-blue-600 hover:border-blue-500 rounded-xl transition-all shadow-sm">
                         <HiOutlinePencilSquare className="w-5 h-5" />
                       </button>
                       <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-red-600 hover:border-red-500 rounded-xl transition-all shadow-sm">

@@ -52,7 +52,7 @@ const Dashboard = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-            Welcome back, <span className="text-primary-600">{user?.name.split(' ')[0]}</span>
+            Welcome back, <span className="text-blue-600">{user?.name.split(' ')[0]}</span>
           </h1>
           <p className="text-slate-500 dark:text-slate-300 mt-2 text-lg font-medium">
             Here's what's happening with your support tickets today.
@@ -63,7 +63,7 @@ const Dashboard = () => {
             onClick={() => navigate('/ai')}
             className="btn-secondary flex items-center gap-2 px-6 shadow-sm"
           >
-            <HiOutlineSparkles className="w-5 h-5 text-primary-500" />
+            <HiOutlineSparkles className="w-5 h-5 text-blue-500" />
             Quick AI Chat
           </button>
           <button 
@@ -109,7 +109,7 @@ const Dashboard = () => {
             {user?.role === 'admin' && (
               <button 
                 onClick={() => navigate('/audit-log')}
-                className="text-[10px] font-black text-primary-600 uppercase tracking-widest hover:underline flex items-center gap-1"
+                className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline flex items-center gap-1"
               >
                 Full Audit Log <HiOutlineArrowRight className="w-3 h-3" />
               </button>
@@ -121,15 +121,15 @@ const Dashboard = () => {
                 <div key={act.id} className="p-5 flex items-center justify-between hover:bg-slate-50/50 dark:hover:bg-slate-700/20 transition-all group">
                   <div className="flex items-center gap-4">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs shadow-sm border ${
-                      act.type === 'security' ? 'bg-red-50 text-red-600 border-red-100' :
-                      act.type === 'ticket' ? 'bg-blue-50 text-blue-600 border-blue-100' :
-                      act.type === 'kb' ? 'bg-green-50 text-green-600 border-green-100' :
-                      'bg-slate-50 text-slate-600 border-slate-100'
+                      act.type === 'security' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30' :
+                      act.type === 'ticket' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/30' :
+                      act.type === 'kb' ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' :
+                      'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-100 dark:border-slate-700'
                     }`}>
                       {act.user.charAt(0)}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary-600 transition-colors">
+                      <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
                         {act.action} <span className="text-slate-400 font-medium">by</span> {act.user}
                       </p>
                       <p className="text-xs font-medium text-slate-500 line-clamp-1">{act.detail}</p>
@@ -154,17 +154,17 @@ const Dashboard = () => {
 
         {/* AI Shortcut Card */}
         <div className="card card-3d bg-slate-900 text-white border-none shadow-2xl shadow-slate-900/30 p-8 flex flex-col justify-between relative overflow-hidden group">
-          <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary-500/20 rounded-full blur-[80px] group-hover:bg-primary-500/30 transition-all duration-700"></div>
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-blue-500/20 rounded-full blur-[80px] group-hover:bg-blue-500/30 transition-all duration-700"></div>
           <div className="relative z-10">
-            <div className="w-12 h-12 bg-primary-600/20 rounded-2xl flex items-center justify-center mb-6 border border-primary-600/30">
-              <HiOutlineSparkles className="w-6 h-6 text-primary-400" />
+            <div className="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-6 border border-blue-600/30">
+              <HiOutlineSparkles className="w-6 h-6 text-blue-400" />
             </div>
             <h3 className="text-2xl font-black tracking-tight mb-2">Need Instant Help?</h3>
             <p className="text-slate-400 font-medium leading-relaxed mb-8">
               Our AI Assistant can resolve 80% of common IT issues instantly without a ticket.
             </p>
             <div className="space-y-3">
-              <button onClick={() => navigate('/ai')} className="w-full py-3.5 px-6 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all active:scale-[0.98] shadow-lg shadow-primary-600/20">
+              <button onClick={() => navigate('/ai')} className="w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all active:scale-[0.98] shadow-lg shadow-blue-600/20">
                 Start AI Consultation
               </button>
               <button onClick={() => navigate('/kb')} className="w-full py-3.5 px-6 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold transition-all border border-white/10">
@@ -188,20 +188,20 @@ const Dashboard = () => {
 
 const StatCard = ({ title, value, icon: Icon, color, description }) => {
   const colors = {
-    blue: 'text-blue-600 bg-blue-50 border-blue-100 shadow-blue-600/5',
-    green: 'text-green-600 bg-green-50 border-green-100 shadow-green-600/5',
-    amber: 'text-amber-600 bg-amber-50 border-amber-100 shadow-amber-600/5',
+    blue: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900/30 shadow-blue-600/5 dark:shadow-blue-900/20',
+    green: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900/30 shadow-green-600/5 dark:shadow-green-900/20',
+    amber: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900/30 shadow-amber-600/5 dark:shadow-amber-900/20',
   };
 
   return (
-    <div className={`card card-3d p-8 border-transparent hover:border-slate-200 transition-all group ${colors[color]}`}>
+    <div className={`card card-3d p-8 border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all group ${colors[color]}`}>
       <div className="flex justify-between items-start mb-4">
-        <div className={`p-3 rounded-2xl bg-white shadow-sm border border-slate-100 group-hover:scale-110 transition-transform`}>
+        <div className={`p-3 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 group-hover:scale-110 transition-transform`}>
           <Icon className="w-6 h-6" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-widest opacity-60">{description}</span>
+        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">{description}</span>
       </div>
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 opacity-70">{title}</p>
+      <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 text-slate-600 dark:text-slate-400">{title}</p>
       <p className="text-5xl font-black tracking-tighter text-slate-900 dark:text-white">{value}</p>
     </div>
   );

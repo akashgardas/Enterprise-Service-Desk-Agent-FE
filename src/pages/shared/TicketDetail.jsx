@@ -92,7 +92,7 @@ const TicketDetail = () => {
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-all font-bold text-sm uppercase tracking-widest group"
         >
-          <div className="p-2 bg-white rounded-xl border border-border-color group-hover:border-primary-500 group-hover:text-primary-600 transition-all">
+          <div className="p-2 bg-white rounded-xl border border-border-color group-hover:border-blue-500 group-hover:text-blue-600 transition-all">
             <HiOutlineArrowLeft className="w-5 h-5" />
           </div>
           Back to list
@@ -127,7 +127,7 @@ const TicketDetail = () => {
               <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-xs font-black text-primary-600 bg-primary-50 px-2.5 py-1 rounded-lg border border-primary-100 uppercase tracking-widest">
+                    <span className="font-mono text-xs font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100 uppercase tracking-widest">
                       {ticket.id}
                     </span>
                     <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${STATUS_COLORS[ticket.status]?.bg} ${STATUS_COLORS[ticket.status]?.text} border border-current/10`}>
@@ -154,8 +154,8 @@ const TicketDetail = () => {
                   <h4 className="text-xs font-black text-text-secondary uppercase tracking-[0.2em] mb-4">Supporting Documents</h4>
                   <div className="flex flex-wrap gap-4">
                     {ticket.attachments.map((file, idx) => (
-                      <div key={idx} className="flex items-center gap-3 px-4 py-3 bg-bg-secondary border border-border-color rounded-2xl text-sm font-bold text-text-primary hover:border-primary-500 hover:text-primary-600 cursor-pointer transition-all group">
-                        <HiOutlinePaperClip className="w-5 h-5 text-text-secondary group-hover:text-primary-500 transition-colors" />
+                      <div key={idx} className="flex items-center gap-3 px-4 py-3 bg-bg-secondary border border-border-color rounded-2xl text-sm font-bold text-text-primary hover:border-blue-500 hover:text-blue-600 cursor-pointer transition-all group">
+                        <HiOutlinePaperClip className="w-5 h-5 text-text-secondary group-hover:text-blue-500 transition-colors" />
                         {file}
                       </div>
                     ))}
@@ -169,7 +169,7 @@ const TicketDetail = () => {
           <div className="card shadow-xl shadow-slate-200/50">
             <div className="p-6 border-b border-border-color bg-bg-secondary/30 flex items-center justify-between">
               <h3 className="font-black text-text-primary uppercase tracking-widest text-xs flex items-center gap-2">
-                <HiOutlineChatBubbleLeftRight className="w-5 h-5 text-primary-500" />
+                <HiOutlineChatBubbleLeftRight className="w-5 h-5 text-blue-500" />
                 Communication History
               </h3>
               <span className="text-[10px] font-bold text-text-secondary uppercase bg-white px-2 py-1 rounded-lg border border-border-color">
@@ -181,7 +181,7 @@ const TicketDetail = () => {
               {ticket.comments.map((comment) => (
                 <div key={comment.id} className={`flex gap-4 ${comment.userId === user.id ? 'flex-row-reverse' : ''}`}>
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black uppercase shrink-0 text-sm shadow-sm ${
-                    comment.userId === user.id ? 'bg-primary-600 text-white' : 'bg-white border border-border-color text-primary-700'
+                    comment.userId === user.id ? 'bg-blue-600 text-white' : 'bg-white border border-border-color text-blue-700'
                   }`}>
                     {comment.userName.charAt(0)}
                   </div>
@@ -194,7 +194,7 @@ const TicketDetail = () => {
                     </div>
                     <div className={`p-5 rounded-[2rem] text-base leading-relaxed shadow-sm ${
                       comment.userId === user.id 
-                        ? 'bg-primary-600 text-white rounded-tr-none' 
+                        ? 'bg-blue-600 text-white rounded-tr-none' 
                         : 'bg-white border border-border-color text-text-primary rounded-tl-none'
                     }`}>
                       {comment.text}
@@ -218,7 +218,7 @@ const TicketDetail = () => {
                   <button 
                     type="submit"
                     disabled={isSubmitting || !comment.trim()}
-                    className="btn-primary py-4 px-8 shadow-xl shadow-primary-600/30"
+                    className="btn-primary py-4 px-8 shadow-xl shadow-blue-600/30"
                   >
                     {isSubmitting ? (
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -245,7 +245,7 @@ const TicketDetail = () => {
               <div className="pt-6 border-t border-border-color">
                 <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-4">Assigned Agent</p>
                 <div className="flex items-center gap-4 p-4 bg-bg-secondary rounded-2xl border border-border-color/50">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-border-color flex items-center justify-center text-primary-600 font-black shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-border-color flex items-center justify-center text-blue-600 font-black shadow-sm">
                     {ticket.assignedTo?.charAt(0) || '?'}
                   </div>
                   <div>
@@ -259,11 +259,11 @@ const TicketDetail = () => {
 
           {isAgentOrManager && (
             <div className="card bg-slate-900 text-white border-none shadow-2xl shadow-slate-900/40 p-8 relative overflow-hidden group">
-              <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary-600/20 rounded-full blur-[80px] group-hover:bg-primary-500/30 transition-all duration-700"></div>
+              <div className="absolute -right-10 -top-10 w-40 h-40 bg-blue-600/20 rounded-full blur-[80px] group-hover:bg-blue-500/30 transition-all duration-700"></div>
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="p-2 bg-primary-500/20 rounded-xl">
-                    <HiOutlineSparkles className="w-6 h-6 text-primary-400" />
+                  <div className="p-2 bg-blue-500/20 rounded-xl">
+                    <HiOutlineSparkles className="w-6 h-6 text-blue-400" />
                   </div>
                   <h3 className="font-black uppercase tracking-widest text-xs">AI Copilot</h3>
                 </div>
@@ -286,7 +286,7 @@ const TicketDetail = () => {
                   {idx !== ticket.timeline.length - 1 && (
                     <div className="absolute left-[9px] top-6 bottom-[-32px] w-0.5 bg-slate-100"></div>
                   )}
-                  <div className="w-5 h-5 rounded-full bg-white border-4 border-primary-500 z-10 shrink-0 shadow-sm"></div>
+                  <div className="w-5 h-5 rounded-full bg-white border-4 border-blue-500 z-10 shrink-0 shadow-sm"></div>
                   <div className="space-y-1">
                     <p className="text-sm font-bold text-text-primary leading-none">{event.action}</p>
                     <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">

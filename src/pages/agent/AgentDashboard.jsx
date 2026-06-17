@@ -103,7 +103,7 @@ const AgentDashboard = () => {
           <div className="space-y-6">
             {stats?.recentActivity?.slice(0, 6).map((activity, idx) => (
               <div key={idx} className="flex gap-4">
-                <div className="w-2 h-2 rounded-full bg-primary-500 mt-2 shrink-0"></div>
+                <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0"></div>
                 <div>
                   <p className="text-sm font-semibold text-text-primary">{activity.action}</p>
                   <p className="text-xs text-text-secondary mb-1">{activity.detail}</p>

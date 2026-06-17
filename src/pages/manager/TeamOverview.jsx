@@ -105,7 +105,7 @@ const TeamOverview = () => {
                 <tr key={agent.id} className="hover:bg-bg-secondary/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold uppercase text-xs">
+                      <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold uppercase text-xs">
                         {agent.name.charAt(0)}
                       </div>
                       <span className="font-semibold text-text-primary">{agent.name}</span>

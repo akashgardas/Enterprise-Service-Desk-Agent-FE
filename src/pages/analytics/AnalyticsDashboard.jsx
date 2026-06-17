@@ -57,14 +57,14 @@ const AnalyticsDashboard = () => {
             </select>
           </div>
           <div className="relative group">
-            <button className="btn-primary flex items-center gap-2 whitespace-nowrap shadow-primary-600/20">
+            <button className="btn-primary flex items-center gap-2 whitespace-nowrap shadow-blue-600/20">
               <HiOutlineArrowDownTray className="w-5 h-5" />
               Export Report
             </button>
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-border-color invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50 p-2">
-              <button onClick={() => handleExport('PDF')} className="w-full text-left px-4 py-2 text-sm font-bold text-text-primary hover:bg-primary-50 hover:text-primary-700 rounded-xl transition-colors">Export as PDF</button>
-              <button onClick={() => handleExport('Excel')} className="w-full text-left px-4 py-2 text-sm font-bold text-text-primary hover:bg-primary-50 hover:text-primary-700 rounded-xl transition-colors">Export as Excel (.xlsx)</button>
-              <button onClick={() => handleExport('CSV')} className="w-full text-left px-4 py-2 text-sm font-bold text-text-primary hover:bg-primary-50 hover:text-primary-700 rounded-xl transition-colors">Export as CSV</button>
+              <button onClick={() => handleExport('PDF')} className="w-full text-left px-4 py-2 text-sm font-bold text-text-primary hover:bg-blue-50 hover:text-blue-700 rounded-xl transition-colors">Export as PDF</button>
+              <button onClick={() => handleExport('Excel')} className="w-full text-left px-4 py-2 text-sm font-bold text-text-primary hover:bg-blue-50 hover:text-blue-700 rounded-xl transition-colors">Export as Excel (.xlsx)</button>
+              <button onClick={() => handleExport('CSV')} className="w-full text-left px-4 py-2 text-sm font-bold text-text-primary hover:bg-blue-50 hover:text-blue-700 rounded-xl transition-colors">Export as CSV</button>
             </div>
           </div>
         </div>
@@ -198,7 +198,7 @@ const AnalyticsDashboard = () => {
             
             <div className="space-y-6">
               <SLAProgressBar label="Resolution Time Target" percentage={87} color="bg-green-500" />
-              <SLAProgressBar label="Initial Response Target" percentage={94} color="bg-primary-500" />
+              <SLAProgressBar label="Initial Response Target" percentage={94} color="bg-blue-500" />
               <SLAProgressBar label="Critical Issue Target" percentage={100} color="bg-purple-500" />
             </div>
           </div>
@@ -209,10 +209,10 @@ const AnalyticsDashboard = () => {
 };
 
 const MetricCard = ({ title, value, change, isPositive }) => (
-  <div className="card p-6 border-transparent hover:border-primary-100 transition-all group">
+  <div className="card p-6 border-transparent hover:border-blue-100 transition-all group">
     <p className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-2">{title}</p>
     <div className="flex items-end justify-between">
-      <p className="text-3xl font-extrabold text-text-primary group-hover:text-primary-600 transition-colors">{value}</p>
+      <p className="text-3xl font-extrabold text-text-primary group-hover:text-blue-600 transition-colors">{value}</p>
       <span className={`text-xs font-bold px-2 py-1 rounded-lg ${isPositive ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
         {change}
       </span>

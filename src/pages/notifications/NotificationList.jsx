@@ -60,7 +60,7 @@ const NotificationList = () => {
         </div>
         <button 
           onClick={handleMarkAllAsRead}
-          className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-2"
+          className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-2"
         >
           <HiOutlineCheckCircle className="w-5 h-5" />
           Mark all as read
@@ -71,14 +71,14 @@ const NotificationList = () => {
         {notifications.map((notification) => (
           <div 
             key={notification.id} 
-            className={`p-6 border-b border-border-color last:border-0 hover:bg-bg-secondary transition-colors cursor-pointer relative ${!notification.read ? 'bg-primary-50/20' : ''}`}
+            className={`p-6 border-b border-border-color last:border-0 hover:bg-bg-secondary transition-colors cursor-pointer relative ${!notification.read ? 'bg-blue-50/20' : ''}`}
             onClick={() => !notification.read && handleMarkAsRead(notification.id)}
           >
             {!notification.read && (
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary-600"></div>
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600"></div>
             )}
             <div className="flex gap-4">
-              <div className={`p-3 rounded-xl ${!notification.read ? 'bg-primary-100 text-primary-600' : 'bg-bg-secondary text-text-secondary'}`}>
+              <div className={`p-3 rounded-xl ${!notification.read ? 'bg-blue-100 text-blue-600' : 'bg-bg-secondary text-text-secondary'}`}>
                 <HiOutlineBell className="w-6 h-6" />
               </div>
               <div className="flex-grow">
@@ -92,7 +92,7 @@ const NotificationList = () => {
                   </div>
                 </div>
                 <p className="text-xs text-text-secondary">
-                  Related to Ticket: <span className="font-mono font-medium text-primary-600">{notification.ticketId}</span>
+                  Related to Ticket: <span className="font-mono font-medium text-blue-600">{notification.ticketId}</span>
                 </p>
               </div>
             </div>

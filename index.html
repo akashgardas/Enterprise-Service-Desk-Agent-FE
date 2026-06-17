@@ -4,11 +4,26 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Enterprise Service Desk Agent - AI-powered IT support platform for ticket management, knowledge base, and intelligent assistance." />
+    <meta name="description" content="Enterprise Service Desk Agent - IT support platform for ticket management, knowledge base, and assistance." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <title>Enterprise Service Desk Agent</title>
+    <script>
+      // Apply theme before React loads to prevent flash
+      (function() {
+        try {
+          const theme = localStorage.getItem('app-theme');
+          if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {
+          console.error('Failed to apply theme:', e);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
