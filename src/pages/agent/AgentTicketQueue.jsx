@@ -1,0 +1,200 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ticketService from '../../services/ticketService';
+import Loading from '../../components/common/Loading';
+import EmptyState from '../../components/common/EmptyState';
+import { HiOutlineMagnifyingGlass, HiOutlineFunnel, HiOutlineAdjustmentsHorizontal, HiOutlineUserCircle } from 'react-icons/hi2';
+import { STATUS_COLORS, PRIORITY_COLORS, TICKET_CATEGORIES } from '../../config/constants';
+
+const AgentTicketQueue = () => {
+  const navigate = useNavigate();
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    status: '',
+    priority: '',
+    category: '',
+    search: ''
+  });
+
+  useEffect(() => {
+    const fetchAllTickets = async () => {
+      setLoading(true);
+      try {
+        const { data } = await ticketService.getTickets();
+        setTickets(data);
+      } catch (error) {
+        console.error('Failed to fetch ticket queue', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllTickets();
+  }, []);
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({ ...prev, [name]: value }));
+  };
+
+  const filteredTickets = tickets.filter(ticket => {
+    const matchesStatus = !filters.status || ticket.status === filters.status;
+    const matchesPriority = !filters.priority || ticket.priority === filters.priority;
+    const matchesCategory = !filters.category || ticket.category === filters.category;
+    const matchesSearch = !filters.search || 
+      ticket.title.toLowerCase().includes(filters.search.toLowerCase()) || 
+      ticket.id.toLowerCase().includes(filters.search.toLowerCase());
+    
+    return matchesStatus && matchesPriority && matchesCategory && matchesSearch;
+  });
+
+  if (loading) return <Loading />;
+
+  return (
+    <div className="space-y-10 animate-fade-in pb-12">
+      <div>
+        <h1 className="text-3xl font-extrabold text-text-primary tracking-tight">Agent Ticket Queue</h1>
+        <p className="text-text-secondary mt-1 text-lg">Manage all incoming support requests across the organization</p>
+      </div>
+
+      <div className="card shadow-xl shadow-slate-200/50">
+        <div className="p-8 bg-bg-secondary/30 border-b border-border-color">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            <div className="lg:col-span-2 relative">
+              <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-6 h-6" />
+              <input 
+                type="text" 
+                name="search"
+                value={filters.search}
+                onChange={handleFilterChange}
+                placeholder="Search ID, title, or user..." 
+                className="input-field pl-12 py-3"
+              />
+            </div>
+            
+            <select 
+              name="status"
+              value={filters.status}
+              onChange={handleFilterChange}
+              className="input-field py-3 text-sm font-semibold bg-white"
+            >
+              <option value="">All Statuses</option>
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+              <option value="Escalated">Escalated</option>
+            </select>
+
+            <select 
+              name="priority"
+              value={filters.priority}
+              onChange={handleFilterChange}
+              className="input-field py-3 text-sm font-semibold bg-white"
+            >
+              <option value="">All Priorities</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+
+            <select 
+              name="category"
+              value={filters.category}
+              onChange={handleFilterChange}
+              className="input-field py-3 text-sm font-semibold bg-white"
+            >
+              <option value="">All Categories</option>
+              {Object.values(TICKET_CATEGORIES).map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {filteredTickets.length === 0 ? (
+          <EmptyState title="No matches found" message="Try adjusting your filters or search query to find tickets." />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead className="bg-bg-secondary/50 text-text-secondary text-[10px] uppercase font-bold tracking-widest">
+                <tr>
+                  <th className="px-8 py-5">Ticket Info</th>
+                  <th className="px-8 py-5 text-center">Priority</th>
+                  <th className="px-8 py-5 text-center">Status</th>
+                  <th className="px-8 py-5">Assignee</th>
+                  <th className="px-8 py-5">SLA Remaining</th>
+                  <th className="px-8 py-5 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-color">
+                {filteredTickets.map((ticket) => (
+                  <tr key={ticket.id} className="hover:bg-primary-50/30 transition-colors group">
+                    <td className="px-8 py-6">
+                      <div className="flex flex-col">
+                        <span className="font-mono text-[10px] font-bold text-primary-600 bg-primary-50 px-2 py-0.5 rounded border border-primary-100 uppercase w-fit mb-2">
+                          {ticket.id}
+                        </span>
+                        <span className="font-bold text-text-primary text-base line-clamp-1 group-hover:text-primary-600 transition-colors">{ticket.title}</span>
+                        <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mt-1">
+                          By {ticket.createdBy} • {ticket.category}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6">
+                      <div className="flex justify-center">
+                        <span className={`px-3 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-widest ${PRIORITY_COLORS[ticket.priority]?.bg} ${PRIORITY_COLORS[ticket.priority]?.text} shadow-sm`}>
+                          {ticket.priority}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6">
+                      <div className="flex justify-center">
+                        <span className={`px-3 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-widest ${STATUS_COLORS[ticket.status]?.bg} ${STATUS_COLORS[ticket.status]?.text} border border-current/10`}>
+                          {ticket.status}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl bg-primary-100 flex items-center justify-center text-xs font-extrabold text-primary-700 shadow-sm border border-primary-200">
+                          {ticket.assignedTo?.charAt(0) || '?'}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-text-primary">{ticket.assignedTo || 'Unassigned'}</span>
+                          <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Support Agent</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-text-primary">
+                          {new Date(ticket.slaDeadline).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        </span>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
+                          <span className="text-[10px] text-red-600 font-extrabold uppercase tracking-widest">2h 15m remaining</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6 text-right">
+                      <button 
+                        onClick={() => navigate(`/tickets/${ticket.id}`)}
+                        className="p-3 bg-white border border-border-color text-text-secondary rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:border-primary-500 hover:text-primary-600 hover:shadow-lg shadow-sm"
+                      >
+                        <HiOutlineAdjustmentsHorizontal className="w-6 h-6" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default AgentTicketQueue;
