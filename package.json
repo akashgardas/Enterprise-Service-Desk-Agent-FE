@@ -100,7 +100,6 @@
     "keyv": "^4.5.4",
     "levn": "^0.4.1",
     "lightningcss": "^1.32.0",
-    "lightningcss-win32-x64-msvc": "^1.32.0",
     "locate-path": "^6.0.0",
     "lru-cache": "^5.1.1",
     "magic-string": "^0.30.21",
@@ -159,6 +158,10 @@
     "yocto-queue": "^0.1.0",
     "zod": "^4.4.3",
     "zod-validation-error": "^4.0.2"
+  },
+  "optionalDependencies": {
+    "lightningcss-win32-x64-msvc": "^1.32.0",
+    "lightningcss-linux-x64-gnu": "^1.32.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.1",

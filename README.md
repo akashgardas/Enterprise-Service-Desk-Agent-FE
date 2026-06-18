@@ -1,48 +1,105 @@
-# Enterprise-Service-Desk-Agent-FE
+# Enterprise Service Desk Agent - Frontend
 
-A modern web application built using React and Vite, designed to provide a fast, responsive, and user-friendly experience.
+AI-powered support portal built with React and Vite for intelligent ticket management, knowledge base access, analytics, and real-time support.
 
 ---
 
 ## Overview
 
-This frontend application serves as the user interface for the project. It communicates with backend APIs, manages authentication, handles user interactions, and provides visualizations and notifications.
+Enterprise Service Desk Agent is a modern support management platform that enables employees to receive instant AI-powered assistance, create and track support tickets, access knowledge base articles, and monitor issue resolution.
+
+The frontend provides dashboards and interfaces for Employees, Service Desk Agents, Managers, and Administrators.
 
 ---
 
 ## Features
 
-* Responsive User Interface
+### Authentication
+
 * JWT Authentication
+* Role-Based Access Control (RBAC)
+* Multi-Factor Authentication Support
+* Password Reset
 * Protected Routes
-* API Integration using Axios
-* Form Validation with React Hook Form
-* Interactive Charts and Analytics
+
+### AI Support Assistant
+
+* Natural Language Conversations
+* Context-Aware Responses
+* Suggested Questions
+* Knowledge Base Integration
+* Session Management
+
+### Ticket Management
+
+* Create Tickets
+* Search and Filter Tickets
+* Track Ticket Status
+* Ticket Prioritization
+* View Ticket Details
+* Resolution Tracking
+
+### Knowledge Base
+
+* Search Articles
+* Browse Categories
+* Self-Service Troubleshooting
+
+### Analytics Dashboard
+
+* Open Ticket Metrics
+* Resolved Tickets
+* Average Resolution Time
+* SLA Monitoring
+* Agent Performance Insights
+
+### Notifications
+
 * Toast Notifications
+* Real-Time Updates
 * Loading Indicators
-* Modern Component-Based Architecture
-* Client-Side Routing
-* Tailwind CSS Styling
 
 ---
 
 ## Tech Stack
 
-| Category           | Technology         |
-| ------------------ | ------------------ |
-| Frontend Framework | React              |
-| Build Tool         | Vite               |
-| Language           | JavaScript         |
-| Styling            | Tailwind CSS       |
-| Routing            | React Router DOM   |
-| API Client         | Axios              |
-| Forms              | React Hook Form    |
-| Icons              | React Icons        |
-| Charts             | Recharts           |
-| Notifications      | React Toastify     |
-| Loading Indicators | React Spinners     |
-| Authentication     | JWT + LocalStorage |
-| Version Control    | Git + GitHub       |
+| Category           | Technology       |
+| ------------------ | ---------------- |
+| Frontend Framework | React            |
+| Build Tool         | Vite             |
+| Language           | JavaScript       |
+| Styling            | Tailwind CSS     |
+| Routing            | React Router DOM |
+| API Client         | Axios            |
+| Form Handling      | React Hook Form  |
+| Icons              | React Icons      |
+| Charts             | Recharts         |
+| Notifications      | React Toastify   |
+| Loaders            | React Spinners   |
+| Authentication     | JWT              |
+| Version Control    | Git + GitHub     |
+
+---
+
+## Architecture
+
+User
+
+↓
+
+React Frontend
+
+↓
+
+FastAPI Backend
+
+↓
+
+MongoDB Atlas
+
+↓
+
+Gemini AI
 
 ---
 
@@ -56,9 +113,9 @@ src/
 ├── pages/
 ├── layouts/
 ├── routes/
-├── services/
 ├── hooks/
 ├── context/
+├── services/
 ├── utils/
 ├── constants/
 ├── styles/
@@ -75,7 +132,7 @@ src/
 
 ```bash
 git clone <repository-url>
-cd <project-name>
+cd frontend
 ```
 
 ### Install Dependencies
@@ -84,25 +141,37 @@ cd <project-name>
 npm install
 ```
 
-### Configure Environment Variables
+---
 
-Create a `.env` file in the root directory:
+## Environment Variables
+
+Create:
+
+```text
+.env
+```
+
+Add:
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000
+VITE_API_BASE_URL=https://your-backend.onrender.com
+
+VITE_WS_BASE_URL=wss://your-backend.onrender.com
+
+VITE_APP_NAME=Enterprise Service Desk
+
+VITE_ENV=production
 ```
 
 ---
 
-## Running Locally
-
-Start the development server:
+## Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Application will be available at:
+Application runs at:
 
 ```text
 http://localhost:5173
@@ -110,16 +179,10 @@ http://localhost:5173
 
 ---
 
-## Build for Production
+## Build Production
 
 ```bash
 npm run build
-```
-
-Generated files will be available in:
-
-```text
-dist/
 ```
 
 ---
@@ -132,161 +195,142 @@ npm run preview
 
 ---
 
-## Authentication Flow
-
-```text
-User Login
-     │
-     ▼
-Backend Authentication
-     │
-     ▼
-JWT Token Generated
-     │
-     ▼
-Stored in LocalStorage
-     │
-     ▼
-Protected Routes Access
-```
-
----
-
-## API Communication
-
-```text
-Frontend
-    │
-    ▼
-Axios Client
-    │
-    ▼
-Backend API
-    │
-    ▼
-Database
-```
-
----
-
 ## Available Scripts
+
+### Start Development Server
 
 ```bash
 npm run dev
 ```
 
-Runs development server.
+### Build Application
 
 ```bash
 npm run build
 ```
 
-Creates production build.
+### Preview Production Build
 
 ```bash
 npm run preview
 ```
 
-Previews production build locally.
+### Lint Code
 
 ```bash
 npm run lint
-```
-
-Runs lint checks.
-
----
-
-## Environment Variables
-
-| Variable          | Description          |
-| ----------------- | -------------------- |
-| VITE_API_BASE_URL | Backend API Base URL |
-
-Example:
-
-```env
-VITE_API_BASE_URL=https://api.example.com
 ```
 
 ---
 
 ## Deployment
 
-This application can be deployed using:
+Frontend is deployed on Vercel.
 
-* Vercel
-* Netlify
-* GitHub Pages
-* Render
-* Cloudflare Pages
+CI/CD Workflow:
+
+Developer
+
+↓
+
+Push to dev
+
+↓
+
+Pull Request
+
+↓
+
+GitHub Actions
+
+* Install Dependencies
+* Lint
+* Build
+
+↓
+
+Merge to main
+
+↓
+
+Vercel Auto Deployment
 
 ---
 
-## Git Workflow
+## Screens
 
-### Development Branch
+### Login Page
 
-```bash
-git checkout dev
-```
+* Role Selection
+* Email Authentication
+* Password Visibility Toggle
+* Forgot Password
 
-Push all development work to:
+### Employee Dashboard
 
-```text
-dev
-```
+* Ticket Summary
+* Recent Activities
+* AI Assistant Shortcut
 
-### Production Branch
+### AI Support Assistant
 
-```text
-main
-```
+* Context-Aware Conversations
+* Suggested Queries
+* Knowledge Base Integration
 
-Only reviewed and approved Pull Requests should be merged into the main branch.
+### Ticket Dashboard
 
-Workflow:
+* Search and Filter Tickets
+* Status Monitoring
+* Priority Indicators
 
-```text
-Feature Development
-        │
-        ▼
-Push to dev
-        │
-        ▼
-Create Pull Request
-        │
-        ▼
-Review & Approval
-        │
-        ▼
-Merge to main
-```
+### Create Ticket
+
+* Category Selection
+* Priority Assignment
+* Description Validation
+* Draft Auto-Save
 
 ---
 
 ## Future Enhancements
 
-* Dark Mode
-* Role-Based Access Control
-* Multi-Factor Authentication
-* Offline Support
-* Progressive Web App Features
-* Real-Time Notifications
+* Voice-Based AI Support
+* Mobile Applications
+* Predictive Analytics
+* Multi-Language Support
+* Real-Time Collaboration
+* WebSocket Notifications
+* Advanced LLM Integration
+* Cloud-Native Architecture
+
+---
+
+## Deployment Platforms
+
+| Component      | Platform       |
+| -------------- | -------------- |
+| Frontend       | Vercel         |
+| Backend        | Render         |
+| Database       | MongoDB Atlas  |
+| AI             | Gemini         |
+| Source Control | GitHub         |
+| CI/CD          | GitHub Actions |
 
 ---
 
 ## Contributors
 
-| Name        | Role               |
-| ----------- | ------------------ |
-| Team Member | Frontend Developer |
-| Team Member | UI/UX Developer    |
+* Frontend Team
+* Backend Team
+* AI Team
 
 ---
 
 ## License
 
-This project is licensed under the MIT License.
----es/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
->>>>>>> complete-project
+MIT License
+
+---
+
+Built with React, Vite, FastAPI, MongoDB Atlas, and Google Gemini.
