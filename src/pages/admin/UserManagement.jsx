@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import userService from '../../services/userService';
 import Loading from '../../components/common/Loading';
 import EmptyState from '../../components/common/EmptyState';
@@ -12,10 +13,12 @@ import {
   HiOutlineFunnel,
   HiOutlineEllipsisVertical,
   HiOutlineXMark,
-  HiOutlineCheck
+  HiOutlineCheck,
+  HiOutlineExclamationTriangle
 } from 'react-icons/hi2';
 
 const UserManagement = () => {
+  const location = useLocation();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -26,8 +29,11 @@ const UserManagement = () => {
     email: '',
     phone: '',
     role: 'employee',
-    department: 'Engineering'
+    department: 'Engineering',
+    status: 'active'
   });
+  const [editingUser, setEditingUser] = useState(null);
+  const [deleteUserId, setDeleteUserId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
 
@@ -47,6 +53,39 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
+  const openCreateModal = () => {
+    setEditingUser(null);
+    setNewUser({
+      name: '',
+      email: '',
+      phone: '',
+      role: 'employee',
+      department: 'Engineering',
+      status: 'active'
+    });
+    setShowModal(true);
+  };
+
+  const openEditModal = (user) => {
+    setEditingUser(user);
+    setNewUser({
+      name: user.name,
+      email: user.email,
+      phone: user.phone || '',
+      role: user.role,
+      department: user.department || 'Engineering',
+      status: user.status || 'active'
+    });
+    setShowModal(true);
+  };
+
+  useEffect(() => {
+    if (location.state?.openProvisionModal) {
+      openCreateModal();
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(search.toLowerCase()) || 
                          user.email.toLowerCase().includes(search.toLowerCase());
@@ -60,24 +99,43 @@ const UserManagement = () => {
     setSuccess('');
     
     try {
-      await userService.createUser(newUser);
-      setSuccess('User provisioned successfully!');
+      if (editingUser) {
+        await userService.updateUser(editingUser.id, newUser);
+        setSuccess('User updated successfully!');
+      } else {
+        await userService.createUser(newUser);
+        setSuccess('User provisioned successfully!');
+      }
       setNewUser({
         name: '',
         email: '',
         phone: '',
         role: 'employee',
-        department: 'Engineering'
+        department: 'Engineering',
+        status: 'active'
       });
       fetchUsers();
       setTimeout(() => {
         setShowModal(false);
         setSuccess('');
+        setEditingUser(null);
       }, 2000);
     } catch (err) {
-      console.error('Failed to provision user', err);
+      console.error(editingUser ? 'Failed to update user' : 'Failed to provision user', err);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteUserId) return;
+    try {
+      await userService.deleteUser(deleteUserId);
+      fetchUsers();
+    } catch (err) {
+      console.error('Failed to delete user', err);
+    } finally {
+      setDeleteUserId(null);
     }
   };
 
@@ -90,7 +148,7 @@ const UserManagement = () => {
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">System Administration</h1>
           <p className="text-slate-500 dark:text-slate-300 mt-1 text-lg font-medium">Manage user accounts, permissions, and departmental access.</p>
         </div>
-        <button onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-blue-600/30">
+        <button onClick={openCreateModal} className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-blue-600/30">
           <HiOutlineUserPlus className="w-6 h-6" />
           Provision New User
         </button>
@@ -136,7 +194,7 @@ const UserManagement = () => {
                 <th className="px-8 py-5 text-center">System Role</th>
                 <th className="px-8 py-5">Department</th>
                 <th className="px-8 py-5 text-center">Status</th>
-                <th className="px-8 py-5 text-right">Actions</th>
+                <th className="px-8 py-5 text-center min-w-[120px]">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -188,12 +246,20 @@ const UserManagement = () => {
                       </span>
                     </div>
                   </td>
-                  <td className="px-8 py-6 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-blue-600 hover:border-blue-500 rounded-xl transition-all shadow-sm">
+                  <td className="px-8 py-6 text-center">
+                    <div className="flex justify-center gap-2">
+                      <button 
+                        onClick={() => openEditModal(user)}
+                        className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-blue-600 hover:border-blue-500 rounded-xl transition-all shadow-sm"
+                        title="Edit User"
+                      >
                         <HiOutlinePencilSquare className="w-5 h-5" />
                       </button>
-                      <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-red-600 hover:border-red-500 rounded-xl transition-all shadow-sm">
+                      <button 
+                        onClick={() => setDeleteUserId(user.id)}
+                        className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-red-600 hover:border-red-500 rounded-xl transition-all shadow-sm"
+                        title="Delete User"
+                      >
                         <HiOutlineTrash className="w-5 h-5" />
                       </button>
                     </div>
@@ -213,12 +279,16 @@ const UserManagement = () => {
 
       {/* Provision New User Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-2xl w-full border border-neutral-200 dark:border-slate-700">
-            <div className="p-8 border-b border-neutral-200 dark:border-slate-700 flex justify-between items-center">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm flex justify-center items-start p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-2xl w-full border border-neutral-200 dark:border-slate-700 my-4 md:my-10">
+            <div className="p-6 border-b border-neutral-200 dark:border-slate-700 flex justify-between items-center">
               <div>
-                <h2 className="text-2xl font-black text-slate-900 dark:text-white">Provision New User</h2>
-                <p className="text-slate-500 dark:text-slate-400 mt-1">Create a new user account with appropriate permissions</p>
+                <h2 className="text-xl font-black text-slate-900 dark:text-white">
+                  {editingUser ? 'Edit User Details' : 'Provision New User'}
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  {editingUser ? 'Update user account information, status and role settings.' : 'Create a new user account with appropriate permissions.'}
+                </p>
               </div>
               <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
                 <HiOutlineXMark className="w-6 h-6 text-slate-500" />
@@ -226,7 +296,7 @@ const UserManagement = () => {
             </div>
 
             {success && (
-              <div className="px-8 pt-6">
+              <div className="px-6 pt-4">
                 <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-100 rounded-2xl text-green-700">
                   <HiOutlineCheck className="w-5 h-5" />
                   <span className="font-bold">{success}</span>
@@ -234,8 +304,8 @@ const UserManagement = () => {
               </div>
             )}
 
-            <form onSubmit={handleProvision} className="p-8 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form onSubmit={handleProvision} className="p-6 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Full Name</label>
                   <input 
@@ -285,25 +355,50 @@ const UserManagement = () => {
                     <option>Security Team</option>
                   </select>
                 </div>
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-1.5 md:col-span-2">
                   <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">System Role</label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-4 gap-2">
                     {['Employee', 'Agent', 'Manager', 'Admin'].map(role => (
                       <button 
                         key={role}
                         type="button"
                         onClick={() => setNewUser({ ...newUser, role: role.toLowerCase() })}
-                        className={`p-4 rounded-xl border-2 transition-all text-left ${
+                        className={`py-2.5 px-3 rounded-xl border-2 text-center font-bold text-xs transition-all ${
                           newUser.role === role.toLowerCase() 
-                            ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400' 
-                            : 'border-neutral-200 dark:border-slate-700'
+                            ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 shadow-sm' 
+                            : 'border-neutral-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
                         }`}
                       >
-                        <p className="font-bold">{role}</p>
+                        {role}
                       </button>
                     ))}
                   </div>
                 </div>
+
+                {editingUser && (
+                  <div className="space-y-1.5 md:col-span-2">
+                    <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Account Status</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { value: 'active', label: 'Active', color: 'border-green-600 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' },
+                        { value: 'inactive', label: 'Inactive', color: 'border-red-600 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400' }
+                      ].map(statusOption => (
+                        <button
+                          key={statusOption.value}
+                          type="button"
+                          onClick={() => setNewUser({ ...newUser, status: statusOption.value })}
+                          className={`py-2.5 px-3 rounded-xl border-2 text-center font-bold text-xs transition-all ${
+                            newUser.status === statusOption.value 
+                              ? statusOption.color
+                              : 'border-neutral-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
+                          }`}
+                        >
+                          {statusOption.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-4 pt-4">
@@ -320,10 +415,44 @@ const UserManagement = () => {
                   className="btn-primary flex-1"
                   disabled={saving}
                 >
-                  {saving ? 'Provisioning...' : 'Provision User'}
+                  {saving ? (editingUser ? 'Saving...' : 'Provisioning...') : (editingUser ? 'Save Changes' : 'Provision User')}
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete User Confirmation Modal */}
+      {deleteUserId && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm flex justify-center items-center p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full border border-neutral-200 dark:border-slate-700 p-6 space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-2xl flex items-center justify-center">
+                <HiOutlineExclamationTriangle className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Delete User Account</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">This action cannot be undone.</p>
+              </div>
+            </div>
+            <p className="text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+              Are you sure you want to permanently delete this user account? All associated settings and history may be affected.
+            </p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setDeleteUserId(null)}
+                className="btn-secondary flex-1 py-3 text-sm"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleDelete}
+                className="btn-danger flex-1 py-3 text-sm bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/20 transition-all active:scale-95"
+              >
+                Delete Account
+              </button>
+            </div>
           </div>
         </div>
       )}

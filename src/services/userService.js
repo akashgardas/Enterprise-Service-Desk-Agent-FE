@@ -65,6 +65,38 @@ const userService = {
     return api.post('/users', userData);
   },
 
+  updateUser: async (id, userData) => {
+    if (USE_MOCK) {
+      const index = mockUsers.findIndex(u => u.id === id);
+      if (index !== -1) {
+        mockUsers[index] = { 
+          ...mockUsers[index], 
+          name: userData.name,
+          email: userData.email,
+          role: userData.role.toLowerCase(),
+          department: userData.department,
+          phone: userData.phone,
+          status: userData.status || 'active'
+        };
+        return mockResponse(mockUsers[index]);
+      }
+      return Promise.reject(new Error('User not found'));
+    }
+    return api.put(`/users/${id}`, userData);
+  },
+
+  deleteUser: async (id) => {
+    if (USE_MOCK) {
+      const index = mockUsers.findIndex(u => u.id === id);
+      if (index !== -1) {
+        const deletedUser = mockUsers.splice(index, 1)[0];
+        return mockResponse(deletedUser);
+      }
+      return Promise.reject(new Error('User not found'));
+    }
+    return api.delete(`/users/${id}`);
+  },
+
   changePassword: async (oldPassword, newPassword) => {
     if (USE_MOCK) {
       return mockResponse({ success: true, message: 'Password updated successfully' });

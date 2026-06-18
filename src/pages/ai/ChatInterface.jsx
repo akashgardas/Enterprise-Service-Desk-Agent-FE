@@ -38,7 +38,7 @@ const ChatInterface = () => {
     const fetchSuggestions = async () => {
       try {
         const { data } = await aiService.getSuggestedQuestions();
-        setSuggestedQuestions(data.slice(0, 4));
+        setSuggestedQuestions(data.slice(0, 2));
       } catch (error) {
         console.error('Failed to fetch suggestions', error);
       }
@@ -130,7 +130,7 @@ const ChatInterface = () => {
               </div>
               
               <div className={`max-w-[70%] space-y-3 ${msg.role === 'user' ? 'items-end' : ''}`}>
-                <div className={`p-6 rounded-[2rem] text-lg leading-relaxed shadow-xl ${
+                <div className={`p-6 rounded-[2rem] text-sm leading-relaxed shadow-xl ${
                   msg.role === 'ai' 
                     ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-tl-none border border-slate-100 dark:border-slate-700' 
                     : 'bg-blue-600 text-white rounded-tr-none'
@@ -185,20 +185,20 @@ const ChatInterface = () => {
 
         <div className="p-8 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)]">
           {messages.length === 1 && (
-            <div className="mb-8 animate-fade-in">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-5 flex items-center gap-2">
-                <HiOutlineQuestionMarkCircle className="w-5 h-5 text-blue-500" />
+            <div className="mb-4 animate-fade-in">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 flex items-center gap-2">
+                <HiOutlineQuestionMarkCircle className="w-4 h-4 text-blue-500" />
                 Common Inquiries
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex flex-wrap gap-3">
                 {suggestedQuestions.map((q, i) => (
                   <button
                     key={i}
                     onClick={() => handleSend(q)}
-                    className="text-left p-5 bg-slate-50 dark:bg-slate-900/50 hover:bg-blue-600 dark:hover:bg-blue-600 border border-slate-200 dark:border-slate-700 hover:border-blue-600 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-white transition-all group flex items-center justify-between"
+                    className="text-left px-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 hover:bg-blue-600 dark:hover:bg-blue-600 border border-slate-200 dark:border-slate-700 hover:border-blue-600 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-white transition-all group flex items-center gap-2"
                   >
                     <span>{q}</span>
-                    <HiOutlineArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0" />
+                    <HiOutlineArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-all translate-x-[-6px] group-hover:translate-x-0" />
                   </button>
                 ))}
               </div>
