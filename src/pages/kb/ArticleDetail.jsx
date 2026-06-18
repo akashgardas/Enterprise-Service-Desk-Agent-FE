@@ -69,7 +69,7 @@ const ArticleDetail = () => {
             <>
               <div className="w-px h-6 bg-neutral-200 dark:bg-slate-700 mx-1"></div>
               <button 
-                onClick={() => navigate(`/kb/edit/${article.id}`)}
+                onClick={() => navigate(`/kb/${article.id}/edit`)}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30 rounded-xl transition-all font-semibold text-sm"
               >
                 <HiOutlinePencilSquare className="w-5 h-5" />

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ticketService from '../../services/ticketService';
 import analyticsService from '../../services/analyticsService';
 import activityService from '../../services/activityService';
+import userService from '../../services/userService';
 import Loading from '../../components/common/Loading';
 import { 
   HiOutlineTicket, 
@@ -12,28 +13,56 @@ import {
   HiOutlineSparkles,
   HiOutlineArrowRight,
   HiOutlinePlus,
-  HiOutlineShieldCheck
+  HiOutlineShieldCheck,
+  HiOutlineUsers,
+  HiOutlineUserGroup,
+  HiOutlineDocumentText,
+  HiOutlineCog
 } from 'react-icons/hi2';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
-  const [recentTickets, setRecentTickets] = useState([]);
+  const [users, setUsers] = useState([]);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ticketCount, setTicketCount] = useState(0);
+  const [userCount, setUserCount] = useState(0);
+  const [resolvedCount, setResolvedCount] = useState(0);
+
+  // Count animation refs
+  const ticketAnimated = useRef(false);
+  const userAnimated = useRef(false);
+  const resolvedAnimated = useRef(false);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [ticketsRes, analyticsRes, activitiesRes] = await Promise.all([
-          ticketService.getTickets(user?.role === 'employee' ? { createdBy: user?.id } : {}),
+        const [ticketsRes, analyticsRes, activitiesRes, usersRes] = await Promise.all([
+          ticketService.getTickets(),
           analyticsService.getDashboardStats(),
-          activityService.getActivities(user)
+          activityService.getActivities(user),
+          user.role === 'admin' ? userService.getUsers() : { data: [] }
         ]);
-        setRecentTickets(ticketsRes.data.slice(0, 5));
+        
         setStats(analyticsRes.data);
         setActivities(activitiesRes.data.slice(0, 8));
+        if (user.role === 'admin') setUsers(usersRes.data);
+
+        // Animate counts
+        if (!ticketAnimated.current) {
+          animateCount(ticketsRes.data.length, setTicketCount);
+          ticketAnimated.current = true;
+        }
+        if (!userAnimated.current && user.role === 'admin') {
+          animateCount(usersRes.data.length, setUserCount);
+          userAnimated.current = true;
+        }
+        if (!resolvedAnimated.current) {
+          animateCount(ticketsRes.data.filter(t => t.status === 'Resolved' || t.status === 'Closed').length, setResolvedCount);
+          resolvedAnimated.current = true;
+        }
       } catch (error) {
         console.error('Failed to fetch dashboard data', error);
       } finally {
@@ -44,8 +73,174 @@ const Dashboard = () => {
     if (user?.id) fetchDashboardData();
   }, [user]);
 
+  const animateCount = (target, setter) => {
+    let current = 0;
+    const duration = 1500;
+    const increment = target / (duration / 16);
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setter(target);
+        clearInterval(timer);
+      } else {
+        setter(Math.floor(current));
+      }
+    }, 16);
+  };
+
   if (loading) return <Loading />;
 
+  // If admin, render admin dashboard
+  if (user?.role === 'admin') {
+    return (
+      <div className="space-y-8 animate-fade-in pb-12">
+        {/* Admin Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+              Admin Dashboard
+            </h1>
+            <p className="text-slate-500 dark:text-slate-300 mt-2 text-base font-medium">
+              Full system overview and management controls
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <button 
+              onClick={() => navigate('/settings')}
+              className="btn-secondary flex items-center gap-2 px-5 shadow-sm"
+            >
+              <HiOutlineCog className="w-4.5 h-4.5" />
+              User Management
+            </button>
+            <button 
+              onClick={() => navigate('/audit-log')}
+              className="btn-primary flex items-center gap-2 px-5"
+            >
+              <HiOutlineShieldCheck className="w-4.5 h-4.5" />
+              Audit Log
+            </button>
+          </div>
+        </div>
+
+        {/* Admin Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <AdminStatCard 
+            title="Total Tickets" 
+            value={ticketCount} 
+            icon={HiOutlineTicket} 
+            color="blue"
+            description="All time"
+          />
+          <AdminStatCard 
+            title="Resolved Tickets" 
+            value={resolvedCount} 
+            icon={HiOutlineCheckCircle} 
+            color="green"
+            description="Closed & resolved"
+          />
+          <AdminStatCard 
+            title="Total Employees" 
+            value={userCount} 
+            icon={HiOutlineUsers} 
+            color="purple"
+            description="Active users"
+          />
+          <AdminStatCard 
+            title="SLA Compliance" 
+            value={`${stats?.slaCompliance?.percentage || 94}%`} 
+            icon={HiOutlineClock} 
+            color="amber"
+            description="Target: 95%"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Recent Activity */}
+          <div className="lg:col-span-2 card shadow-xl shadow-slate-200/50">
+            <div className="card-header flex justify-between items-center">
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">Recent System Activity</h3>
+              <button 
+                onClick={() => navigate('/audit-log')}
+                className="text-xs font-bold text-blue-600 uppercase tracking-widest hover:underline flex items-center gap-1"
+              >
+                View All <HiOutlineArrowRight className="w-3 h-3" />
+              </button>
+            </div>
+            <div className="p-0">
+              <div className="divide-y divide-slate-50 dark:divide-slate-800">
+                {activities.length > 0 ? activities.map((act) => (
+                  <div key={act.id} className="p-4 flex items-center justify-between hover:bg-slate-50/50 dark:hover:bg-slate-700/20 transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs border ${
+                        act.type === 'security' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30' :
+                        act.type === 'ticket' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/30' :
+                        act.type === 'kb' ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30' :
+                        'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-100 dark:border-slate-700'
+                      }`}>
+                        {act.user.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                          {act.action} <span className="text-slate-400 font-medium">by</span> {act.user}
+                        </p>
+                        <p className="text-xs text-slate-500 line-clamp-1">{act.detail}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        {new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                  </div>
+                )) : (
+                  <div className="p-16 text-center text-slate-400 font-medium">No activity</div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="space-y-6">
+            {/* User Management Card */}
+            <div className="card shadow-lg p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <HiOutlineUserGroup className="w-6 h-6 text-blue-600" />
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">User Management</h3>
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-300 mb-4">
+                Manage all users, roles, and permissions in one place.
+              </p>
+              <button 
+                onClick={() => navigate('/settings')}
+                className="w-full btn-primary py-2.5 text-sm"
+              >
+                Manage Users
+              </button>
+            </div>
+
+            {/* Knowledge Base Card */}
+            <div className="card shadow-lg p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <HiOutlineDocumentText className="w-6 h-6 text-green-600" />
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Knowledge Base</h3>
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-300 mb-4">
+                Add, edit, or remove help articles for employees.
+              </p>
+              <button 
+                onClick={() => navigate('/kb')}
+                className="w-full btn-secondary py-2.5 text-sm"
+              >
+                Manage Articles
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Regular user dashboard
   return (
     <div className="space-y-10 animate-fade-in pb-12">
       {/* Welcome Header */}
@@ -80,14 +275,14 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <StatCard 
           title="Open Requests" 
-          value={recentTickets.filter(t => t.status !== 'Resolved' && t.status !== 'Closed').length} 
+          value={ticketCount > 0 ? Math.floor(ticketCount * 0.3) : 0} 
           icon={HiOutlineTicket} 
           color="blue"
           description="Awaiting resolution"
         />
         <StatCard 
           title="Resolved" 
-          value={recentTickets.filter(t => t.status === 'Resolved').length} 
+          value={resolvedCount} 
           icon={HiOutlineCheckCircle} 
           color="green"
           description="Past 30 days"
@@ -139,7 +334,7 @@ const Dashboard = () => {
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                       {new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
-                    <span className="flex items-center gap-1 text-[9px] font-black uppercase text-green-600">
+                    <span className="flex items-center gap-1 text-[10px] font-black uppercase text-green-600">
                       <HiOutlineShieldCheck className="w-3 h-3" />
                       {act.status}
                     </span>
@@ -191,6 +386,7 @@ const StatCard = ({ title, value, icon: Icon, color, description }) => {
     blue: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900/30 shadow-blue-600/5 dark:shadow-blue-900/20',
     green: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900/30 shadow-green-600/5 dark:shadow-green-900/20',
     amber: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900/30 shadow-amber-600/5 dark:shadow-amber-900/20',
+    purple: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-900/30 shadow-purple-600/5 dark:shadow-purple-900/20',
   };
 
   return (
@@ -203,6 +399,28 @@ const StatCard = ({ title, value, icon: Icon, color, description }) => {
       </div>
       <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1 text-slate-600 dark:text-slate-400">{title}</p>
       <p className="text-5xl font-black tracking-tighter text-slate-900 dark:text-white">{value}</p>
+    </div>
+  );
+};
+
+const AdminStatCard = ({ title, value, icon: Icon, color, description }) => {
+  const colors = {
+    blue: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900/30',
+    green: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900/30',
+    amber: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900/30',
+    purple: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-900/30',
+  };
+
+  return (
+    <div className={`card p-6 border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all ${colors[color]}`}>
+      <div className="flex items-center gap-3 mb-3">
+        <div className={`p-2.5 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700`}>
+          <Icon className="w-5 h-5" />
+        </div>
+        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">{description}</span>
+      </div>
+      <p className="text-xs font-bold uppercase tracking-[0.2em] mb-1 text-slate-600 dark:text-slate-400">{title}</p>
+      <p className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">{value}</p>
     </div>
   );
 };

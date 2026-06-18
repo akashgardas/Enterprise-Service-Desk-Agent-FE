@@ -12,7 +12,10 @@ import {
   HiOutlineFunnel,
   HiOutlineEllipsisVertical,
   HiOutlineXMark,
-  HiOutlineCheck
+  HiOutlineCheck,
+  HiOutlineKey,
+  HiOutlineLockOpen,
+  HiOutlineLockClosed
 } from 'react-icons/hi2';
 
 const UserManagement = () => {
@@ -20,8 +23,9 @@ const UserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('All Roles');
-  const [showModal, setShowModal] = useState(false);
-  const [newUser, setNewUser] = useState({
+  const [showModal, setShowModal] = useState(null); // 'provision', 'edit'
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
@@ -30,6 +34,7 @@ const UserManagement = () => {
   });
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
+  const [showResetConfirm, setShowResetConfirm] = useState(null);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -54,43 +59,95 @@ const UserManagement = () => {
     return matchesSearch && matchesRole;
   });
 
-  const handleProvision = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     setSuccess('');
     
     try {
-      await userService.createUser(newUser);
-      setSuccess('User provisioned successfully!');
-      setNewUser({
-        name: '',
-        email: '',
-        phone: '',
-        role: 'employee',
-        department: 'Engineering'
-      });
+      if (showModal === 'edit' && selectedUser) {
+        await userService.updateUser(selectedUser.id, formData);
+        setSuccess('User updated successfully!');
+      } else {
+        await userService.createUser(formData);
+        setSuccess('User provisioned successfully!');
+      }
       fetchUsers();
       setTimeout(() => {
-        setShowModal(false);
+        setShowModal(null);
+        setSelectedUser(null);
         setSuccess('');
       }, 2000);
     } catch (err) {
-      console.error('Failed to provision user', err);
+      console.error('Failed to save user', err);
     } finally {
       setSaving(false);
     }
   };
 
+  const handleEdit = (user) => {
+    setSelectedUser(user);
+    setFormData({
+      name: user.name,
+      email: user.email,
+      phone: user.phone || '',
+      role: user.role,
+      department: user.department
+    });
+    setShowModal('edit');
+  };
+
+  const handleDelete = async (userId) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      try {
+        await userService.deleteUser(userId);
+        fetchUsers();
+      } catch (err) {
+        console.error('Failed to delete user', err);
+      }
+    }
+  };
+
+  const handleResetPassword = async (userId) => {
+    try {
+      const { data } = await userService.resetUserPassword(userId);
+      alert(`Password reset successfully! Temporary password: ${data.tempPassword}`);
+      setShowResetConfirm(null);
+    } catch (err) {
+      console.error('Failed to reset password', err);
+    }
+  };
+
+  const handleTogglePermission = async (userId, canReset) => {
+    try {
+      await userService.toggleResetPermission(userId, canReset);
+      fetchUsers();
+    } catch (err) {
+      console.error('Failed to toggle permission', err);
+    }
+  };
+
+  const openProvisionModal = () => {
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      role: 'employee',
+      department: 'Engineering'
+    });
+    setShowModal('provision');
+  };
+
   if (loading) return <Loading />;
 
   return (
-    <div className="space-y-10 animate-fade-in pb-12">
+    <div className="space-y-8 animate-fade-in pb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">System Administration</h1>
-          <p className="text-slate-500 dark:text-slate-300 mt-1 text-lg font-medium">Manage user accounts, permissions, and departmental access.</p>
+          <p className="text-slate-500 dark:text-slate-300 mt-2 text-lg font-medium">Manage user accounts, permissions, and departmental access.</p>
         </div>
-        <button onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-blue-600/30">
+        <button onClick={openProvisionModal} className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-blue-600/30">
           <HiOutlineUserPlus className="w-6 h-6" />
           Provision New User
         </button>
@@ -99,7 +156,7 @@ const UserManagement = () => {
       <div className="card shadow-xl shadow-slate-200/50">
         <div className="p-8 bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between gap-6">
           <div className="relative flex-grow max-w-xl">
-            <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-6 h-6" />
+            <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
             <input 
               type="text" 
               placeholder="Search by name, email, or employee ID..." 
@@ -109,7 +166,7 @@ const UserManagement = () => {
             />
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
               <HiOutlineFunnel className="w-5 h-5" />
               Filter By Role
             </div>
@@ -136,6 +193,7 @@ const UserManagement = () => {
                 <th className="px-8 py-5 text-center">System Role</th>
                 <th className="px-8 py-5">Department</th>
                 <th className="px-8 py-5 text-center">Status</th>
+                <th className="px-8 py-5 text-center">Reset Permission</th>
                 <th className="px-8 py-5 text-right">Actions</th>
               </tr>
             </thead>
@@ -161,7 +219,7 @@ const UserManagement = () => {
                       </div>
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-400">
                         <HiOutlinePhone className="w-4 h-4 text-slate-400" />
-                        {user.phone}
+                        {user.phone || 'N/A'}
                       </div>
                     </div>
                   </td>
@@ -188,12 +246,41 @@ const UserManagement = () => {
                       </span>
                     </div>
                   </td>
+                  <td className="px-8 py-6">
+                    <div className="flex justify-center">
+                      <button
+                        onClick={() => handleTogglePermission(user.id, !user.canResetPassword)}
+                        className={`p-2 rounded-lg border transition-all ${
+                          user.canResetPassword 
+                            ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300' 
+                            : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'
+                        }`}
+                      >
+                        {user.canResetPassword ? <HiOutlineLockOpen className="w-5 h-5" /> : <HiOutlineLockClosed className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-blue-600 hover:border-blue-500 rounded-xl transition-all shadow-sm">
+                      <button 
+                        onClick={() => handleEdit(user)}
+                        className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-blue-600 hover:border-blue-500 rounded-xl transition-all shadow-sm"
+                        title="Edit User"
+                      >
                         <HiOutlinePencilSquare className="w-5 h-5" />
                       </button>
-                      <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-red-600 hover:border-red-500 rounded-xl transition-all shadow-sm">
+                      <button 
+                        onClick={() => setShowResetConfirm(user.id)}
+                        className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-amber-600 hover:border-amber-500 rounded-xl transition-all shadow-sm"
+                        title="Reset Password"
+                      >
+                        <HiOutlineKey className="w-5 h-5" />
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(user.id)}
+                        className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-red-600 hover:border-red-500 rounded-xl transition-all shadow-sm"
+                        title="Delete User"
+                      >
                         <HiOutlineTrash className="w-5 h-5" />
                       </button>
                     </div>
@@ -201,7 +288,7 @@ const UserManagement = () => {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan="6">
+                  <td colSpan="7">
                     <EmptyState title="No users found" message="Try broadening your search or filter criteria." />
                   </td>
                 </tr>
@@ -211,68 +298,72 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* Provision New User Modal */}
+      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-2xl w-full border border-neutral-200 dark:border-slate-700">
-            <div className="p-8 border-b border-neutral-200 dark:border-slate-700 flex justify-between items-center">
+          <div className="bg-white dark:bg-slate-800 rounded-[2rem] shadow-2xl max-w-2xl w-full border border-slate-200 dark:border-slate-700">
+            <div className="p-8 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
               <div>
-                <h2 className="text-2xl font-black text-slate-900 dark:text-white">Provision New User</h2>
-                <p className="text-slate-500 dark:text-slate-400 mt-1">Create a new user account with appropriate permissions</p>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+                  {showModal === 'edit' ? 'Edit User' : 'Provision New User'}
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 mt-1">
+                  {showModal === 'edit' ? 'Update user information' : 'Create a new user account'}
+                </p>
               </div>
-              <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
+              <button onClick={() => setShowModal(null)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
                 <HiOutlineXMark className="w-6 h-6 text-slate-500" />
               </button>
             </div>
 
             {success && (
               <div className="px-8 pt-6">
-                <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-100 rounded-2xl text-green-700">
+                <div className="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30 rounded-2xl text-green-700 dark:text-green-400">
                   <HiOutlineCheck className="w-5 h-5" />
-                  <span className="font-bold">{success}</span>
+                  <span className="font-semibold">{success}</span>
                 </div>
               </div>
             )}
 
-            <form onSubmit={handleProvision} className="p-8 space-y-6">
+            <form onSubmit={handleSubmit} className="p-8 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Full Name</label>
+                  <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">Full Name</label>
                   <input 
                     type="text" 
-                    value={newUser.name}
-                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="input py-3"
                     placeholder="John Doe"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Email Address</label>
+                  <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">Email Address</label>
                   <input 
                     type="email" 
-                    value={newUser.email}
-                    onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="input py-3"
                     placeholder="john@company.com"
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Phone Number</label>
+                  <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">Phone Number</label>
                   <input 
                     type="tel" 
-                    value={newUser.phone}
-                    onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="input py-3"
                     placeholder="+1-555-0100"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Department</label>
+                  <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">Department</label>
                   <select 
-                    value={newUser.department}
-                    onChange={(e) => setNewUser({ ...newUser, department: e.target.value })}
+                    value={formData.department}
+                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                     className="input py-3"
                   >
                     <option>Engineering</option>
@@ -286,17 +377,17 @@ const UserManagement = () => {
                   </select>
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">System Role</label>
+                  <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] ml-1">System Role</label>
                   <div className="grid grid-cols-2 gap-3">
                     {['Employee', 'Agent', 'Manager', 'Admin'].map(role => (
                       <button 
                         key={role}
                         type="button"
-                        onClick={() => setNewUser({ ...newUser, role: role.toLowerCase() })}
-                        className={`p-4 rounded-xl border-2 transition-all text-left ${
-                          newUser.role === role.toLowerCase() 
+                        onClick={() => setFormData({ ...formData, role: role.toLowerCase() })}
+                        className={`p-4 rounded-2xl border-2 transition-all text-left ${
+                          formData.role === role.toLowerCase() 
                             ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400' 
-                            : 'border-neutral-200 dark:border-slate-700'
+                            : 'border-slate-200 dark:border-slate-700'
                         }`}
                       >
                         <p className="font-bold">{role}</p>
@@ -309,7 +400,7 @@ const UserManagement = () => {
               <div className="flex gap-4 pt-4">
                 <button 
                   type="button" 
-                  onClick={() => setShowModal(false)}
+                  onClick={() => setShowModal(null)}
                   className="btn-secondary flex-1"
                   disabled={saving}
                 >
@@ -320,10 +411,42 @@ const UserManagement = () => {
                   className="btn-primary flex-1"
                   disabled={saving}
                 >
-                  {saving ? 'Provisioning...' : 'Provision User'}
+                  {saving ? 'Saving...' : (showModal === 'edit' ? 'Update User' : 'Provision User')}
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Reset Password Confirmation */}
+      {showResetConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-[2rem] shadow-2xl max-w-md w-full border border-slate-200 dark:border-slate-700 p-8">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">Reset Password</h2>
+              <button onClick={() => setShowResetConfirm(null)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
+                <HiOutlineXMark className="w-5 h-5 text-slate-500" />
+              </button>
+            </div>
+            <p className="text-slate-600 dark:text-slate-300 mb-8">
+              Are you sure you want to reset this user's password? They will receive a temporary password.
+            </p>
+            <div className="flex gap-4">
+              <button 
+                type="button" 
+                onClick={() => setShowResetConfirm(null)}
+                className="btn-secondary flex-1"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => handleResetPassword(showResetConfirm)}
+                className="btn-primary flex-1"
+              >
+                Reset Password
+              </button>
+            </div>
           </div>
         </div>
       )}
