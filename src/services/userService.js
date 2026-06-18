@@ -49,52 +49,64 @@ const userService = {
   createUser: async (userData) => {
     if (USE_MOCK) {
       const newUser = {
-      id: `u${mockUsers.length + 1}`,
-      name: userData.name,
-      email: userData.email,
-      role: userData.role.toLowerCase(),
-      department: userData.department,
-      avatar: null,
-      status: 'active',
-      phone: userData.phone,
-      createdAt: new Date().toISOString()
-    };
-    mockUsers.unshift(newUser);
-    return mockResponse(newUser);
-  }
+        id: `u${mockUsers.length + 1}`,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role.toLowerCase(),
+        department: userData.department,
+        avatar: null,
+        status: 'active',
+        phone: userData.phone || '',
+        createdAt: new Date().toISOString(),
+        canResetPassword: true
+      };
+      mockUsers.unshift(newUser);
+      return mockResponse(newUser);
+    }
     return api.post('/users', userData);
   },
 
-  updateUser: async (id, userData) => {
+  updateUser: async (userId, userData) => {
     if (USE_MOCK) {
-      const index = mockUsers.findIndex(u => u.id === id);
+      const index = mockUsers.findIndex(u => u.id === userId);
       if (index !== -1) {
-        mockUsers[index] = { 
-          ...mockUsers[index], 
-          name: userData.name,
-          email: userData.email,
-          role: userData.role.toLowerCase(),
-          department: userData.department,
-          phone: userData.phone,
-          status: userData.status || 'active'
-        };
+        mockUsers[index] = { ...mockUsers[index], ...userData };
         return mockResponse(mockUsers[index]);
       }
-      return Promise.reject(new Error('User not found'));
+      return mockResponse(null, 404);
     }
-    return api.put(`/users/${id}`, userData);
+    return api.put(`/users/${userId}`, userData);
   },
 
-  deleteUser: async (id) => {
+  deleteUser: async (userId) => {
     if (USE_MOCK) {
-      const index = mockUsers.findIndex(u => u.id === id);
+      const index = mockUsers.findIndex(u => u.id === userId);
       if (index !== -1) {
-        const deletedUser = mockUsers.splice(index, 1)[0];
-        return mockResponse(deletedUser);
+        mockUsers.splice(index, 1);
+        return mockResponse({ success: true });
       }
-      return Promise.reject(new Error('User not found'));
+      return mockResponse(null, 404);
     }
-    return api.delete(`/users/${id}`);
+    return api.delete(`/users/${userId}`);
+  },
+
+  resetUserPassword: async (userId) => {
+    if (USE_MOCK) {
+      return mockResponse({ success: true, tempPassword: 'TempPass123!' });
+    }
+    return api.post(`/users/${userId}/reset-password`);
+  },
+
+  toggleResetPermission: async (userId, canReset) => {
+    if (USE_MOCK) {
+      const index = mockUsers.findIndex(u => u.id === userId);
+      if (index !== -1) {
+        mockUsers[index].canResetPassword = canReset;
+        return mockResponse(mockUsers[index]);
+      }
+      return mockResponse(null, 404);
+    }
+    return api.patch(`/users/${userId}/reset-permission`, { canReset });
   },
 
   changePassword: async (oldPassword, newPassword) => {

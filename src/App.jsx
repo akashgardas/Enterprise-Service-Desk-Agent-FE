@@ -21,6 +21,7 @@ import AnalyticsDashboard from './pages/analytics/AnalyticsDashboard';
 import TicketDetail from './pages/shared/TicketDetail';
 import ArticleList from './pages/kb/ArticleList';
 import ArticleDetail from './pages/kb/ArticleDetail';
+import ArticleEditor from './pages/kb/ArticleEditor';
 import ChatInterface from './pages/ai/ChatInterface';
 import AccountSettings from './pages/shared/AccountSettings';
 import HelpCenter from './pages/shared/HelpCenter';
@@ -51,7 +52,16 @@ const AppRoutes = () => {
         {/* Knowledge Base */}
         <Route path="kb" element={<ArticleList />} />
         <Route path="kb/:id" element={<ArticleDetail />} />
-        <Route path="kb/new" element={<ProtectedRoute roles={[ROLES.ADMIN, ROLES.AGENT]}><div className="p-8">KB Editor Coming Soon</div></ProtectedRoute>} />
+        <Route path="kb/new" element={
+          <ProtectedRoute roles={[ROLES.ADMIN, ROLES.AGENT]}>
+            <ArticleEditor />
+          </ProtectedRoute>
+        } />
+        <Route path="kb/:id/edit" element={
+          <ProtectedRoute roles={[ROLES.ADMIN, ROLES.AGENT]}>
+            <ArticleEditor />
+          </ProtectedRoute>
+        } />
 
         {/* AI Assistant */}
         <Route path="ai" element={<ChatInterface />} />
