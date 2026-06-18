@@ -2,21 +2,21 @@ import { v4 as uuidv4 } from 'uuid';
 
 // ── Users ──────────────────────────────────────────
 export const mockUsers = [
-  { id: 'u1', name: 'John Carter', email: 'john@company.com', role: 'employee', department: 'Engineering', avatar: null, status: 'active', phone: '+1-555-0101', createdAt: '2025-01-15T09:00:00Z' },
-  { id: 'u2', name: 'Emily Zhang', email: 'emily@company.com', role: 'employee', department: 'Marketing', avatar: null, status: 'active', phone: '+1-555-0102', createdAt: '2025-02-10T09:00:00Z' },
-  { id: 'u3', name: 'Robert Wilson', email: 'robert@company.com', role: 'employee', department: 'Sales', avatar: null, status: 'active', phone: '+1-555-0103', createdAt: '2025-03-01T09:00:00Z' },
-  { id: 'u4', name: 'Priya Patel', email: 'priya@company.com', role: 'employee', department: 'HR', avatar: null, status: 'active', phone: '+1-555-0104', createdAt: '2025-03-15T09:00:00Z' },
-  { id: 'u5', name: 'David Kim', email: 'david@company.com', role: 'employee', department: 'Finance', avatar: null, status: 'inactive', phone: '+1-555-0105', createdAt: '2025-04-01T09:00:00Z' },
-  { id: 'u6', name: 'Sarah Mitchell', email: 'sarah@company.com', role: 'agent', department: 'Network Team', avatar: null, status: 'active', phone: '+1-555-0201', createdAt: '2024-06-01T09:00:00Z' },
-  { id: 'u7', name: 'James Cooper', email: 'james@company.com', role: 'agent', department: 'Hardware Team', avatar: null, status: 'active', phone: '+1-555-0202', createdAt: '2024-07-01T09:00:00Z' },
-  { id: 'u8', name: 'Lisa Park', email: 'lisa@company.com', role: 'agent', department: 'Application Team', avatar: null, status: 'active', phone: '+1-555-0203', createdAt: '2024-08-01T09:00:00Z' },
-  { id: 'u9', name: 'Ahmed Hassan', email: 'ahmed@company.com', role: 'agent', department: 'Messaging Team', avatar: null, status: 'active', phone: '+1-555-0204', createdAt: '2024-09-01T09:00:00Z' },
-  { id: 'u10', name: 'Maria Garcia', email: 'maria@company.com', role: 'agent', department: 'Security Team', avatar: null, status: 'active', phone: '+1-555-0205', createdAt: '2024-10-01T09:00:00Z' },
-  { id: 'u11', name: 'Michael Torres', email: 'mike@company.com', role: 'manager', department: 'IT Support', avatar: null, status: 'active', phone: '+1-555-0301', createdAt: '2024-01-01T09:00:00Z' },
-  { id: 'u12', name: 'Rachel Adams', email: 'rachel@company.com', role: 'manager', department: 'IT Operations', avatar: null, status: 'active', phone: '+1-555-0302', createdAt: '2024-02-01T09:00:00Z' },
-  { id: 'u13', name: 'Anita Sharma', email: 'admin@company.com', role: 'admin', department: 'IT Administration', avatar: null, status: 'active', phone: '+1-555-0401', createdAt: '2023-06-01T09:00:00Z' },
-  { id: 'u14', name: 'Carlos Rivera', email: 'carlos@company.com', role: 'employee', department: 'Engineering', avatar: null, status: 'active', phone: '+1-555-0106', createdAt: '2025-05-01T09:00:00Z' },
-  { id: 'u15', name: 'Nina Kowalski', email: 'nina@company.com', role: 'employee', department: 'Design', avatar: null, status: 'active', phone: '+1-555-0107', createdAt: '2025-05-15T09:00:00Z' },
+  { id: 'u1', name: 'John Carter', email: 'john@company.com', role: 'employee', department: 'Engineering', avatar: null, status: 'active', phone: '+1-555-0101', createdAt: '2025-01-15T09:00:00Z', canResetPassword: true },
+  { id: 'u2', name: 'Emily Zhang', email: 'emily@company.com', role: 'employee', department: 'Marketing', avatar: null, status: 'active', phone: '+1-555-0102', createdAt: '2025-02-10T09:00:00Z', canResetPassword: true },
+  { id: 'u3', name: 'Robert Wilson', email: 'robert@company.com', role: 'employee', department: 'Sales', avatar: null, status: 'active', phone: '+1-555-0103', createdAt: '2025-03-01T09:00:00Z', canResetPassword: true },
+  { id: 'u4', name: 'Priya Patel', email: 'priya@company.com', role: 'employee', department: 'HR', avatar: null, status: 'active', phone: '+1-555-0104', createdAt: '2025-03-15T09:00:00Z', canResetPassword: true },
+  { id: 'u5', name: 'David Kim', email: 'david@company.com', role: 'employee', department: 'Finance', avatar: null, status: 'inactive', phone: '+1-555-0105', createdAt: '2025-04-01T09:00:00Z', canResetPassword: false },
+  { id: 'u6', name: 'Sarah Mitchell', email: 'sarah@company.com', role: 'agent', department: 'Network Team', avatar: null, status: 'active', phone: '+1-555-0201', createdAt: '2024-06-01T09:00:00Z', canResetPassword: true },
+  { id: 'u7', name: 'James Cooper', email: 'james@company.com', role: 'agent', department: 'Hardware Team', avatar: null, status: 'active', phone: '+1-555-0202', createdAt: '2024-07-01T09:00:00Z', canResetPassword: true },
+  { id: 'u8', name: 'Lisa Park', email: 'lisa@company.com', role: 'agent', department: 'Application Team', avatar: null, status: 'active', phone: '+1-555-0203', createdAt: '2024-08-01T09:00:00Z', canResetPassword: true },
+  { id: 'u9', name: 'Ahmed Hassan', email: 'ahmed@company.com', role: 'agent', department: 'Messaging Team', avatar: null, status: 'active', phone: '+1-555-0204', createdAt: '2024-09-01T09:00:00Z', canResetPassword: true },
+  { id: 'u10', name: 'Maria Garcia', email: 'maria@company.com', role: 'agent', department: 'Security Team', avatar: null, status: 'active', phone: '+1-555-0205', createdAt: '2024-10-01T09:00:00Z', canResetPassword: true },
+  { id: 'u11', name: 'Michael Torres', email: 'mike@company.com', role: 'manager', department: 'IT Support', avatar: null, status: 'active', phone: '+1-555-0301', createdAt: '2024-01-01T09:00:00Z', canResetPassword: true },
+  { id: 'u12', name: 'Rachel Adams', email: 'rachel@company.com', role: 'manager', department: 'IT Operations', avatar: null, status: 'active', phone: '+1-555-0302', createdAt: '2024-02-01T09:00:00Z', canResetPassword: true },
+  { id: 'u13', name: 'Anita Sharma', email: 'admin@company.com', role: 'admin', department: 'IT Administration', avatar: null, status: 'active', phone: '+1-555-0401', createdAt: '2023-06-01T09:00:00Z', canResetPassword: true },
+  { id: 'u14', name: 'Carlos Rivera', email: 'carlos@company.com', role: 'employee', department: 'Engineering', avatar: null, status: 'active', phone: '+1-555-0106', createdAt: '2025-05-01T09:00:00Z', canResetPassword: true },
+  { id: 'u15', name: 'Nina Kowalski', email: 'nina@company.com', role: 'employee', department: 'Design', avatar: null, status: 'active', phone: '+1-555-0107', createdAt: '2025-05-15T09:00:00Z', canResetPassword: true },
 ];
 
 // ── Departments ────────────────────────────────────
