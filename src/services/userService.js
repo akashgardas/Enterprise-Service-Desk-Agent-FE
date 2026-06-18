@@ -1,6 +1,7 @@
 import api, { mockResponse } from './api';
 import { mockUsers } from '../mock/mockData';
 import { USE_MOCK } from '../config/constants';
+import { v4 as uuidv4 } from 'uuid';
 
 const userService = {
   getUsers: async () => {
@@ -43,6 +44,25 @@ const userService = {
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('user', JSON.stringify(response.data.user));
     return response;
+  },
+
+  createUser: async (userData) => {
+    if (USE_MOCK) {
+      const newUser = {
+      id: `u${mockUsers.length + 1}`,
+      name: userData.name,
+      email: userData.email,
+      role: userData.role.toLowerCase(),
+      department: userData.department,
+      avatar: null,
+      status: 'active',
+      phone: userData.phone,
+      createdAt: new Date().toISOString()
+    };
+    mockUsers.unshift(newUser);
+    return mockResponse(newUser);
+  }
+    return api.post('/users', userData);
   },
 
   changePassword: async (oldPassword, newPassword) => {

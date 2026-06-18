@@ -10,7 +10,9 @@ import {
   HiOutlinePhone,
   HiOutlineMagnifyingGlass,
   HiOutlineFunnel,
-  HiOutlineEllipsisVertical
+  HiOutlineEllipsisVertical,
+  HiOutlineXMark,
+  HiOutlineCheck
 } from 'react-icons/hi2';
 
 const UserManagement = () => {
@@ -18,6 +20,16 @@ const UserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('All Roles');
+  const [showModal, setShowModal] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    role: 'employee',
+    department: 'Engineering'
+  });
+  const [saving, setSaving] = useState(false);
+  const [success, setSuccess] = useState('');
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -42,6 +54,33 @@ const UserManagement = () => {
     return matchesSearch && matchesRole;
   });
 
+  const handleProvision = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setSuccess('');
+    
+    try {
+      await userService.createUser(newUser);
+      setSuccess('User provisioned successfully!');
+      setNewUser({
+        name: '',
+        email: '',
+        phone: '',
+        role: 'employee',
+        department: 'Engineering'
+      });
+      fetchUsers();
+      setTimeout(() => {
+        setShowModal(false);
+        setSuccess('');
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to provision user', err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) return <Loading />;
 
   return (
@@ -51,7 +90,7 @@ const UserManagement = () => {
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">System Administration</h1>
           <p className="text-slate-500 dark:text-slate-300 mt-1 text-lg font-medium">Manage user accounts, permissions, and departmental access.</p>
         </div>
-        <button className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-primary-600/30">
+        <button onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-blue-600/30">
           <HiOutlineUserPlus className="w-6 h-6" />
           Provision New User
         </button>
@@ -105,7 +144,7 @@ const UserManagement = () => {
                 <tr key={user.id} className="table-row group">
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary-600 font-black text-sm border border-slate-200 dark:border-slate-700 shadow-sm group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-all">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-blue-600 font-black text-sm border border-slate-200 dark:border-slate-700 shadow-sm group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
                         {user.name.charAt(0)}
                       </div>
                       <div>
@@ -151,7 +190,7 @@ const UserManagement = () => {
                   </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-primary-600 hover:border-primary-500 rounded-xl transition-all shadow-sm">
+                      <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-blue-600 hover:border-blue-500 rounded-xl transition-all shadow-sm">
                         <HiOutlinePencilSquare className="w-5 h-5" />
                       </button>
                       <button className="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-red-600 hover:border-red-500 rounded-xl transition-all shadow-sm">
@@ -171,6 +210,123 @@ const UserManagement = () => {
           </table>
         </div>
       </div>
+
+      {/* Provision New User Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-2xl w-full border border-neutral-200 dark:border-slate-700">
+            <div className="p-8 border-b border-neutral-200 dark:border-slate-700 flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white">Provision New User</h2>
+                <p className="text-slate-500 dark:text-slate-400 mt-1">Create a new user account with appropriate permissions</p>
+              </div>
+              <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
+                <HiOutlineXMark className="w-6 h-6 text-slate-500" />
+              </button>
+            </div>
+
+            {success && (
+              <div className="px-8 pt-6">
+                <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-100 rounded-2xl text-green-700">
+                  <HiOutlineCheck className="w-5 h-5" />
+                  <span className="font-bold">{success}</span>
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={handleProvision} className="p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Full Name</label>
+                  <input 
+                    type="text" 
+                    value={newUser.name}
+                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                    className="input py-3"
+                    placeholder="John Doe"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Email Address</label>
+                  <input 
+                    type="email" 
+                    value={newUser.email}
+                    onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                    className="input py-3"
+                    placeholder="john@company.com"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Phone Number</label>
+                  <input 
+                    type="tel" 
+                    value={newUser.phone}
+                    onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+                    className="input py-3"
+                    placeholder="+1-555-0100"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Department</label>
+                  <select 
+                    value={newUser.department}
+                    onChange={(e) => setNewUser({ ...newUser, department: e.target.value })}
+                    className="input py-3"
+                  >
+                    <option>Engineering</option>
+                    <option>Marketing</option>
+                    <option>Sales</option>
+                    <option>HR</option>
+                    <option>Network Team</option>
+                    <option>Hardware Team</option>
+                    <option>Application Team</option>
+                    <option>Security Team</option>
+                  </select>
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">System Role</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {['Employee', 'Agent', 'Manager', 'Admin'].map(role => (
+                      <button 
+                        key={role}
+                        type="button"
+                        onClick={() => setNewUser({ ...newUser, role: role.toLowerCase() })}
+                        className={`p-4 rounded-xl border-2 transition-all text-left ${
+                          newUser.role === role.toLowerCase() 
+                            ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400' 
+                            : 'border-neutral-200 dark:border-slate-700'
+                        }`}
+                      >
+                        <p className="font-bold">{role}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button 
+                  type="button" 
+                  onClick={() => setShowModal(false)}
+                  className="btn-secondary flex-1"
+                  disabled={saving}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  className="btn-primary flex-1"
+                  disabled={saving}
+                >
+                  {saving ? 'Provisioning...' : 'Provision User'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

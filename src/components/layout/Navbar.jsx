@@ -9,24 +9,22 @@ import {
   HiOutlineArrowLeftOnRectangle,
   HiOutlineQuestionMarkCircle,
   HiOutlineKey,
-  HiOutlineXMark
+  HiOutlineXMark,
+  HiOutlineCog6Tooth,
+  HiOutlineBars3
 } from 'react-icons/hi2';
 import notificationService from '../../services/notificationService';
 import userService from '../../services/userService';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../hooks/useTheme';
 
-const Navbar = () => {
+const Navbar = ({ onToggleSidebar }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Check localStorage and system preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) return savedTheme === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   
   // Password Change State
@@ -47,21 +45,6 @@ const Navbar = () => {
 
     if (user?.id) fetchNotifications();
   }, [user]);
-
-  useEffect(() => {
-    // Apply dark mode class on mount and when isDarkMode changes
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDarkMode]);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
 
   const handleLogout = () => {
     logout();
@@ -108,8 +91,8 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">{getPageTitle()}</h2>
           <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
-          <div className="flex items-center bg-slate-100 dark:bg-slate-800/50 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 w-80 shadow-inner group transition-all focus-within:ring-4 focus-within:ring-primary-500/10 focus-within:border-primary-500">
-            <HiOutlineMagnifyingGlass className="text-slate-400 w-5 h-5 mr-3 group-focus-within:text-primary-500" />
+          <div className="flex items-center bg-slate-100 dark:bg-slate-800/50 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 w-80 shadow-inner group transition-all focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-500">
+            <HiOutlineMagnifyingGlass className="text-slate-400 w-5 h-5 mr-3 group-focus-within:text-blue-500" />
             <input 
               type="text" 
               placeholder="Search tickets, articles..." 
@@ -118,14 +101,23 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {/* Mobile menu button */}
           <button 
-            onClick={toggleDarkMode}
-            className="p-2.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all active:scale-95"
-            title="Toggle Theme"
-          >
-            {isDarkMode ? <HiOutlineSun className="w-5 h-5" /> : <HiOutlineMoon className="w-5 h-5" />}
-          </button>
+              onClick={onToggleSidebar}
+              className="lg:hidden p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all active:scale-95"
+              title="Toggle Menu"
+            >
+              <HiOutlineBars3 className="w-6 h-6" />
+            </button>
+            
+          <button 
+              onClick={toggleTheme}
+              className="p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all active:scale-95"
+              title="Toggle Theme"
+            >
+              {theme === 'dark' ? <HiOutlineSun className="w-5 h-5" /> : <HiOutlineMoon className="w-5 h-5" />}
+            </button>
 
           <div className="relative group">
             <button className="p-2.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all relative active:scale-95">
@@ -140,12 +132,12 @@ const Navbar = () => {
             <div className="absolute right-0 mt-3 w-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 z-50 overflow-hidden transform origin-top-right group-hover:scale-100 scale-95">
               <div className="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
                 <h3 className="font-black text-xs uppercase tracking-widest text-slate-900 dark:text-white">Recent Alerts</h3>
-                <button className="text-[10px] font-black text-primary-600 uppercase tracking-widest hover:underline">Clear All</button>
+                <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">Clear All</button>
               </div>
               <div className="max-h-[400px] overflow-y-auto">
                 {notifications.length > 0 ? (
                   notifications.slice(0, 5).map(n => (
-                    <div key={n.id} className={`p-4 border-b border-slate-100 dark:border-slate-700/50 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors ${!n.read ? 'bg-primary-50/30 dark:bg-primary-900/10' : ''}`}>
+                    <div key={n.id} className={`p-4 border-b border-slate-100 dark:border-slate-700/50 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors ${!n.read ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}>
                       <p className="text-sm text-slate-800 dark:text-slate-200 font-bold mb-1 line-clamp-2">{n.message}</p>
                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{n.createdAt}</p>
                     </div>
@@ -155,7 +147,7 @@ const Navbar = () => {
                 )}
               </div>
               <div className="p-4 text-center bg-slate-50/50 dark:bg-slate-900/50">
-                <button className="text-xs font-black text-primary-600 uppercase tracking-widest hover:underline" onClick={() => navigate('/notifications')}>View All Alerts</button>
+                <button className="text-xs font-black text-blue-600 uppercase tracking-widest hover:underline" onClick={() => navigate('/notifications')}>View All Alerts</button>
               </div>
             </div>
           </div>
@@ -167,7 +159,7 @@ const Navbar = () => {
               onClick={() => setIsProfileOpen(!isProfileOpen)}
               className="flex items-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-800 p-1.5 pr-4 rounded-xl transition-all active:scale-95 border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
             >
-              <div className="w-9 h-9 rounded-xl bg-primary-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-primary-600/20">
+              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-blue-600/20">
                 {user?.name?.charAt(0)}
               </div>
               <div className="hidden md:block text-left">
@@ -178,8 +170,13 @@ const Navbar = () => {
 
             {isProfileOpen && (
               <div className="absolute right-0 mt-3 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 z-50 p-2 animate-fade-in">
-                <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl transition-all text-left">
-                  <HiOutlineUserCircle className="w-5 h-5 text-slate-400" />
+                <button 
+                  onClick={() => {
+                    navigate('/account');
+                    setIsProfileOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl transition-all text-left">
+                  <HiOutlineCog6Tooth className="w-5 h-5 text-slate-400" />
                   Account Settings
                 </button>
                 <button 
@@ -192,7 +189,12 @@ const Navbar = () => {
                   <HiOutlineKey className="w-5 h-5 text-slate-400" />
                   Change Password
                 </button>
-                <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl transition-all text-left">
+                <button 
+                  onClick={() => {
+                    navigate('/help');
+                    setIsProfileOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl transition-all text-left">
                   <HiOutlineQuestionMarkCircle className="w-5 h-5 text-slate-400" />
                   Help Center
                 </button>
@@ -217,7 +219,7 @@ const Navbar = () => {
             <div className="p-8 md:p-10">
               <div className="flex justify-between items-start mb-8">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary-50 dark:bg-primary-900/20 text-primary-600 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-2xl flex items-center justify-center">
                     <HiOutlineKey className="w-6 h-6" />
                   </div>
                   <div>

@@ -49,7 +49,7 @@ const ArticleList = () => {
         {canManageKB && (
           <button 
             onClick={() => navigate('/kb/new')}
-            className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-primary-600/30"
+            className="btn-primary flex items-center gap-2 py-3 px-8 shadow-xl shadow-blue-600/30"
           >
             <HiOutlinePlus className="w-6 h-6" />
             Publish Article
@@ -71,7 +71,7 @@ const ArticleList = () => {
                   onClick={() => setSelectedCategory(cat)}
                   className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-between group ${
                     selectedCategory === cat 
-                      ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/20' 
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
                       : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
                   }`}
                 >
@@ -86,7 +86,7 @@ const ArticleList = () => {
         {/* Article Grid */}
         <div className="lg:col-span-3 space-y-8">
           <div className="relative group">
-            <HiOutlineMagnifyingGlass className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 w-6 h-6 group-focus-within:text-primary-500 transition-colors" />
+            <HiOutlineMagnifyingGlass className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 w-6 h-6 group-focus-within:text-blue-500 transition-colors" />
             <input
               type="text"
               placeholder="Search documentation, guides, and policies..."
@@ -109,7 +109,7 @@ const ArticleList = () => {
               {articles.map((article) => (
                 <div 
                   key={article.id} 
-                  className="card hover:shadow-2xl hover:translate-y-[-4px] transition-all cursor-pointer group border-transparent hover:border-primary-100 dark:hover:border-primary-900/50"
+                  className="card hover:shadow-2xl hover:translate-y-[-4px] transition-all cursor-pointer group border-transparent hover:border-blue-100 dark:hover:border-blue-900/50"
                   onClick={() => navigate(`/kb/${article.id}`)}
                 >
                   <div className="p-8">
@@ -122,7 +122,7 @@ const ArticleList = () => {
                         {article.views} Views
                       </div>
                     </div>
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white group-hover:text-primary-600 transition-colors mb-4 line-clamp-2 leading-tight">
+                    <h3 className="text-xl font-black text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors mb-4 line-clamp-2 leading-tight">
                       {article.title}
                     </h3>
                     <p className="text-slate-500 dark:text-slate-400 text-sm line-clamp-3 mb-8 leading-relaxed font-medium">

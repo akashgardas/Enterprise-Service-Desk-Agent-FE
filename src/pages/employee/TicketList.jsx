@@ -47,12 +47,12 @@ const EmployeeTicketList = () => {
     <div className="space-y-10 animate-fade-in pb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-text-primary tracking-tight">Support Requests</h1>
-          <p className="text-text-secondary mt-1 text-lg">Track and manage your ongoing support tickets</p>
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Support Requests</h1>
+          <p className="text-neutral-500 dark:text-slate-400 mt-1 text-lg">Track and manage your ongoing support tickets</p>
         </div>
         <button 
           onClick={() => navigate('/tickets/new')}
-          className="btn-primary flex items-center gap-2 text-lg py-3 px-8 shadow-xl shadow-primary-600/30"
+          className="btn-primary flex items-center gap-2 text-lg py-3 px-8 shadow-md"
         >
           <HiOutlinePlus className="w-6 h-6" />
           Create New Ticket
@@ -66,10 +66,10 @@ const EmployeeTicketList = () => {
         <StatusSummaryCard title="Resolved" count={tickets.filter(t => t.status === 'Resolved').length} color="green" />
       </div>
 
-      <div className="card shadow-xl shadow-slate-200/50">
-        <div className="p-6 border-b border-border-color bg-bg-secondary/30 flex flex-col md:flex-row justify-between gap-6">
+      <div className="card shadow-md">
+        <div className="p-6 border-b border-neutral-200 dark:border-slate-700 bg-neutral-50/30 dark:bg-slate-900/20 flex flex-col md:flex-row justify-between gap-6">
           <div className="relative flex-grow max-w-xl">
-            <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-6 h-6" />
+            <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-slate-400 w-6 h-6" />
             <input 
               type="text" 
               placeholder="Search by ID or subject..." 
@@ -79,14 +79,14 @@ const EmployeeTicketList = () => {
             />
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm font-bold text-text-secondary uppercase tracking-widest">
+            <div className="flex items-center gap-2 text-sm font-bold text-neutral-500 dark:text-slate-400 uppercase tracking-widest">
               <HiOutlineFunnel className="w-5 h-5" />
               Filter
             </div>
             <select 
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="input py-2.5 text-sm font-semibold min-w-[160px] bg-white dark:bg-slate-900"
+              className="input py-2.5 text-sm font-semibold min-w-[160px]"
             >
               <option value="all">All Statuses</option>
               <option value="open">Open</option>
@@ -107,7 +107,7 @@ const EmployeeTicketList = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-bg-secondary/50 text-text-secondary text-[10px] uppercase font-bold tracking-widest">
+              <thead className="bg-neutral-50 dark:bg-slate-900 text-neutral-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-widest">
                 <tr>
                   <th className="px-8 py-5">Ticket ID</th>
                   <th className="px-8 py-5">Subject & Category</th>
@@ -117,17 +117,17 @@ const EmployeeTicketList = () => {
                   <th className="px-8 py-5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border-color">
+              <tbody className="divide-y divide-neutral-100 dark:divide-slate-700">
                 {filteredTickets.map((ticket) => (
-                  <tr key={ticket.id} className="hover:bg-primary-50/30 transition-colors group">
+                  <tr key={ticket.id} className="hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors group">
                     <td className="px-8 py-6">
-                      <span className="font-mono text-xs font-bold text-primary-600 bg-primary-50 px-2 py-1 rounded-md border border-primary-100 uppercase">
+                      <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-md border border-blue-100 dark:border-blue-900/30 uppercase">
                         {ticket.id}
                       </span>
                     </td>
                     <td className="px-8 py-6">
-                      <div className="font-bold text-text-primary text-base group-hover:text-primary-600 transition-colors line-clamp-1">{ticket.title}</div>
-                      <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mt-1">{ticket.category}</div>
+                      <div className="font-bold text-slate-900 dark:text-white text-base group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">{ticket.title}</div>
+                      <div className="text-[10px] font-bold text-neutral-500 dark:text-slate-400 uppercase tracking-widest mt-1">{ticket.category}</div>
                     </td>
                     <td className="px-8 py-6">
                       <div className="flex justify-center">
@@ -144,17 +144,17 @@ const EmployeeTicketList = () => {
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                      <div className="text-sm font-semibold text-text-primary">
+                      <div className="text-sm font-semibold text-slate-900 dark:text-white">
                         {new Date(ticket.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                       </div>
-                      <div className="text-[10px] text-text-secondary font-bold uppercase tracking-widest mt-1">
+                      <div className="text-[10px] text-neutral-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-1">
                         {new Date(ticket.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </td>
                     <td className="px-8 py-6 text-right">
                       <button 
                         onClick={() => navigate(`/tickets/${ticket.id}`)}
-                        className="text-primary-600 font-bold hover:text-primary-700 text-sm hover:underline transition-all"
+                        className="text-blue-600 dark:text-blue-400 font-bold hover:text-blue-700 dark:hover:text-blue-300 text-sm hover:underline transition-all"
                       >
                         View Details
                       </button>
@@ -172,10 +172,10 @@ const EmployeeTicketList = () => {
 
 const StatusSummaryCard = ({ title, count, color }) => {
   const colors = {
-    slate: 'text-slate-600 bg-slate-50 border-slate-100',
-    blue: 'text-blue-600 bg-blue-50 border-blue-100',
-    amber: 'text-amber-600 bg-amber-50 border-amber-100',
-    green: 'text-green-600 bg-green-50 border-green-100',
+    slate: 'text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700',
+    blue: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900/30',
+    amber: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900/30',
+    green: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900/30',
   };
 
   return (

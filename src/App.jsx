@@ -22,6 +22,8 @@ import TicketDetail from './pages/shared/TicketDetail';
 import ArticleList from './pages/kb/ArticleList';
 import ArticleDetail from './pages/kb/ArticleDetail';
 import ChatInterface from './pages/ai/ChatInterface';
+import AccountSettings from './pages/shared/AccountSettings';
+import HelpCenter from './pages/shared/HelpCenter';
 
 const AppRoutes = () => {
   const { user, hasRole } = useAuth();
@@ -53,6 +55,12 @@ const AppRoutes = () => {
 
         {/* AI Assistant */}
         <Route path="ai" element={<ChatInterface />} />
+
+        {/* Account Settings */}
+        <Route path="account" element={<AccountSettings />} />
+
+        {/* Help Center */}
+        <Route path="help" element={<HelpCenter />} />
 
         {/* Notifications */}
         <Route path="notifications" element={<NotificationList />} />

@@ -94,7 +94,7 @@ const ChatInterface = () => {
     <div className="flex flex-col h-[calc(100vh-12rem)] animate-fade-in pb-4">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary-600 rounded-xl shadow-lg shadow-primary-600/20">
+          <div className="p-2 bg-blue-600 rounded-xl shadow-lg shadow-blue-600/20">
             <HiOutlineSparkles className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -124,7 +124,7 @@ const ChatInterface = () => {
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-xl ${
                 msg.role === 'ai' 
                   ? 'bg-slate-900 text-white' 
-                  : 'bg-primary-600 text-white'
+                  : 'bg-blue-600 text-white'
               }`}>
                 {msg.role === 'ai' ? <HiOutlineSparkles className="w-6 h-6" /> : <HiOutlineUser className="w-6 h-6" />}
               </div>
@@ -133,7 +133,7 @@ const ChatInterface = () => {
                 <div className={`p-6 rounded-[2rem] text-lg leading-relaxed shadow-xl ${
                   msg.role === 'ai' 
                     ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-tl-none border border-slate-100 dark:border-slate-700' 
-                    : 'bg-primary-600 text-white rounded-tr-none'
+                    : 'bg-blue-600 text-white rounded-tr-none'
                 }`}>
                   {msg.text}
                 </div>
@@ -143,7 +143,7 @@ const ChatInterface = () => {
                     {msg.suggestedActions.map((action, i) => (
                       <button 
                         key={i}
-                        className="px-5 py-2.5 bg-white dark:bg-slate-800 text-primary-600 dark:text-primary-400 rounded-2xl text-sm font-black uppercase tracking-widest border border-primary-100 dark:border-primary-900/50 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all flex items-center gap-2 shadow-sm"
+                        className="px-5 py-2.5 bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 rounded-2xl text-sm font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all flex items-center gap-2 shadow-sm"
                         onClick={() => window.location.href = action.action}
                       >
                         {action.label}
@@ -174,9 +174,9 @@ const ChatInterface = () => {
                 <HiOutlineSparkles className="w-6 h-6" />
               </div>
               <div className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-6 rounded-[2rem] rounded-tl-none shadow-xl flex gap-1.5 items-center">
-                <span className="w-2 h-2 bg-primary-600 rounded-full animate-bounce"></span>
-                <span className="w-2 h-2 bg-primary-600 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                <span className="w-2 h-2 bg-primary-600 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></span>
+                <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:0.4s]"></span>
               </div>
             </div>
           )}
@@ -187,7 +187,7 @@ const ChatInterface = () => {
           {messages.length === 1 && (
             <div className="mb-8 animate-fade-in">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-5 flex items-center gap-2">
-                <HiOutlineQuestionMarkCircle className="w-5 h-5 text-primary-500" />
+                <HiOutlineQuestionMarkCircle className="w-5 h-5 text-blue-500" />
                 Common Inquiries
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -195,7 +195,7 @@ const ChatInterface = () => {
                   <button
                     key={i}
                     onClick={() => handleSend(q)}
-                    className="text-left p-5 bg-slate-50 dark:bg-slate-900/50 hover:bg-primary-600 dark:hover:bg-primary-600 border border-slate-200 dark:border-slate-700 hover:border-primary-600 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-white transition-all group flex items-center justify-between"
+                    className="text-left p-5 bg-slate-50 dark:bg-slate-900/50 hover:bg-blue-600 dark:hover:bg-blue-600 border border-slate-200 dark:border-slate-700 hover:border-blue-600 rounded-2xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-white transition-all group flex items-center justify-between"
                   >
                     <span>{q}</span>
                     <HiOutlineArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0" />
@@ -218,7 +218,7 @@ const ChatInterface = () => {
                 className="input pl-8 pr-20 py-5 text-lg shadow-xl shadow-slate-100/50 dark:shadow-none bg-slate-50/50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
               />
               <div className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-3">
-                <span className={`text-[10px] font-black uppercase tracking-widest ${input.length > 0 ? 'text-primary-600' : 'text-slate-300'}`}>
+                <span className={`text-[10px] font-black uppercase tracking-widest ${input.length > 0 ? 'text-blue-600' : 'text-slate-300'}`}>
                   {input.length} chars
                 </span>
               </div>
@@ -226,7 +226,7 @@ const ChatInterface = () => {
             <button 
               type="submit"
               disabled={!input.trim() || isTyping}
-              className="p-5 bg-primary-600 hover:bg-primary-700 text-white rounded-[1.5rem] transition-all shadow-2xl shadow-primary-600/40 disabled:opacity-50 disabled:shadow-none active:scale-95 shrink-0"
+              className="p-5 bg-blue-600 hover:bg-blue-700 text-white rounded-[1.5rem] transition-all shadow-2xl shadow-blue-600/40 disabled:opacity-50 disabled:shadow-none active:scale-95 shrink-0"
             >
               <HiOutlinePaperAirplane className="w-8 h-8 rotate-45" />
             </button>
