@@ -19,9 +19,27 @@ const LoginPage = () => {
 
   const from = location.state?.from?.pathname || '/';
 
+  // Check for Gmail addresses
+  const isGmail = (email) => {
+    return email.toLowerCase().endsWith('@gmail.com');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    // Validate email if provided (not using role-based login)
+    if (email && isGmail(email)) {
+      setError('Gmail addresses are not allowed. Please use your company email address.');
+      return;
+    }
+
+    // Validate password
+    if (!password) {
+      setError('Please enter a password.');
+      return;
+    }
+
     setLoading(true);
     try {
       await login({ email, password, role: selectedRole });
@@ -95,11 +113,17 @@ const LoginPage = () => {
                     type="email" 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="input pl-12 py-3"
+                    className={`input pl-12 py-3 ${email && isGmail(email) ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20' : ''}`}
                     placeholder="name@company.com"
                     required={!selectedRole}
                   />
                 </div>
+                {email && isGmail(email) && (
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-red-600">
+                    <HiOutlineExclamationCircle className="w-4 h-4" />
+                    Gmail addresses are not permitted
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">

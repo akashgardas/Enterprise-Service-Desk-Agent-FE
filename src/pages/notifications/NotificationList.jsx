@@ -55,8 +55,8 @@ const NotificationList = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Notifications</h1>
-          <p className="text-text-secondary">Stay updated with your ticket activities</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Notifications</h1>
+          <p className="text-neutral-500 dark:text-slate-400">Stay updated with your ticket activities</p>
         </div>
         <button 
           onClick={handleMarkAllAsRead}
@@ -67,32 +67,32 @@ const NotificationList = () => {
         </button>
       </div>
 
-      <div className="bg-bg-card rounded-2xl shadow-sm border border-border-color overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-neutral-200 dark:border-slate-700 overflow-hidden">
         {notifications.map((notification) => (
           <div 
             key={notification.id} 
-            className={`p-6 border-b border-border-color last:border-0 hover:bg-bg-secondary transition-colors cursor-pointer relative ${!notification.read ? 'bg-blue-50/20' : ''}`}
+            className={`p-6 border-b border-neutral-200 dark:border-slate-700 last:border-0 hover:bg-neutral-50 dark:hover:bg-slate-700 transition-colors cursor-pointer relative ${!notification.read ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}
             onClick={() => !notification.read && handleMarkAsRead(notification.id)}
           >
             {!notification.read && (
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600"></div>
             )}
             <div className="flex gap-4">
-              <div className={`p-3 rounded-xl ${!notification.read ? 'bg-blue-100 text-blue-600' : 'bg-bg-secondary text-text-secondary'}`}>
+              <div className={`p-3 rounded-xl ${!notification.read ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'bg-neutral-100 dark:bg-slate-700 text-neutral-500 dark:text-slate-400'}`}>
                 <HiOutlineBell className="w-6 h-6" />
               </div>
               <div className="flex-grow">
                 <div className="flex justify-between items-start mb-1">
-                  <p className={`text-sm ${!notification.read ? 'font-bold text-text-primary' : 'font-medium text-text-primary'}`}>
+                  <p className={`text-sm ${!notification.read ? 'font-bold text-slate-900 dark:text-white' : 'font-medium text-slate-900 dark:text-white'}`}>
                     {notification.message}
                   </p>
-                  <div className="flex items-center text-xs text-text-secondary gap-1 whitespace-nowrap">
+                  <div className="flex items-center text-xs text-neutral-500 dark:text-slate-400 gap-1 whitespace-nowrap">
                     <HiOutlineClock className="w-3 h-3" />
                     {new Date(notification.createdAt).toLocaleString()}
                   </div>
                 </div>
-                <p className="text-xs text-text-secondary">
-                  Related to Ticket: <span className="font-mono font-medium text-blue-600">{notification.ticketId}</span>
+                <p className="text-xs text-neutral-500 dark:text-slate-400">
+                  Related to Ticket: <span className="font-mono font-medium text-blue-600 dark:text-blue-400">{notification.ticketId}</span>
                 </p>
               </div>
             </div>

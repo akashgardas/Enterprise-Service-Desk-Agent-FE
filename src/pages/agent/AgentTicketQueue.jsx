@@ -54,22 +54,22 @@ const AgentTicketQueue = () => {
   return (
     <div className="space-y-10 animate-fade-in pb-12">
       <div>
-        <h1 className="text-3xl font-extrabold text-text-primary tracking-tight">Agent Ticket Queue</h1>
-        <p className="text-text-secondary mt-1 text-lg">Manage all incoming support requests across the organization</p>
+        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Agent Ticket Queue</h1>
+        <p className="text-neutral-500 dark:text-slate-400 mt-1 text-lg">Manage all incoming support requests across the organization</p>
       </div>
 
-      <div className="card shadow-xl shadow-slate-200/50">
-        <div className="p-8 bg-bg-secondary/30 border-b border-border-color">
+      <div className="card shadow-md">
+        <div className="p-8 bg-neutral-50 dark:bg-slate-900/50 border-b border-neutral-200 dark:border-slate-700">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <div className="lg:col-span-2 relative">
-              <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-6 h-6" />
+              <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 w-6 h-6" />
               <input 
                 type="text" 
                 name="search"
                 value={filters.search}
                 onChange={handleFilterChange}
                 placeholder="Search ID, title, or user..." 
-                className="input-field pl-12 py-3"
+                className="input pl-12 py-3"
               />
             </div>
             
@@ -77,7 +77,7 @@ const AgentTicketQueue = () => {
               name="status"
               value={filters.status}
               onChange={handleFilterChange}
-              className="input-field py-3 text-sm font-semibold bg-white"
+              className="input py-3 text-sm font-semibold"
             >
               <option value="">All Statuses</option>
               <option value="Open">Open</option>
@@ -90,7 +90,7 @@ const AgentTicketQueue = () => {
               name="priority"
               value={filters.priority}
               onChange={handleFilterChange}
-              className="input-field py-3 text-sm font-semibold bg-white"
+              className="input py-3 text-sm font-semibold"
             >
               <option value="">All Priorities</option>
               <option value="Critical">Critical</option>
@@ -103,7 +103,7 @@ const AgentTicketQueue = () => {
               name="category"
               value={filters.category}
               onChange={handleFilterChange}
-              className="input-field py-3 text-sm font-semibold bg-white"
+              className="input py-3 text-sm font-semibold"
             >
               <option value="">All Categories</option>
               {Object.values(TICKET_CATEGORIES).map(cat => (
@@ -118,7 +118,7 @@ const AgentTicketQueue = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-bg-secondary/50 text-text-secondary text-[10px] uppercase font-bold tracking-widest">
+              <thead className="table-head">
                 <tr>
                   <th className="px-8 py-5">Ticket Info</th>
                   <th className="px-8 py-5 text-center">Priority</th>
@@ -128,16 +128,16 @@ const AgentTicketQueue = () => {
                   <th className="px-8 py-5 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border-color">
+              <tbody className="divide-y divide-neutral-100 dark:divide-slate-700">
                 {filteredTickets.map((ticket) => (
-                  <tr key={ticket.id} className="hover:bg-blue-50/30 transition-colors group">
+                  <tr key={ticket.id} className="table-row">
                     <td className="px-8 py-6">
                       <div className="flex flex-col">
-                        <span className="font-mono text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase w-fit mb-2">
+                        <span className="font-mono text-[10px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded border border-blue-100 dark:border-blue-900/30 uppercase w-fit mb-2">
                           {ticket.id}
                         </span>
-                        <span className="font-bold text-text-primary text-base line-clamp-1 group-hover:text-blue-600 transition-colors">{ticket.title}</span>
-                        <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mt-1">
+                        <span className="font-bold text-slate-900 dark:text-white text-base line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{ticket.title}</span>
+                        <span className="text-[10px] font-bold text-neutral-500 dark:text-slate-400 uppercase tracking-widest mt-1">
                           By {ticket.createdBy} • {ticket.category}
                         </span>
                       </div>
@@ -158,30 +158,30 @@ const AgentTicketQueue = () => {
                     </td>
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-blue-100 flex items-center justify-center text-xs font-extrabold text-blue-700 shadow-sm border border-blue-200">
+                        <div className="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center text-xs font-extrabold text-blue-700 dark:text-blue-400 shadow-sm border border-blue-200 dark:border-blue-900/30">
                           {ticket.assignedTo?.charAt(0) || '?'}
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-text-primary">{ticket.assignedTo || 'Unassigned'}</span>
-                          <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Support Agent</span>
+                          <span className="text-sm font-bold text-slate-900 dark:text-white">{ticket.assignedTo || 'Unassigned'}</span>
+                          <span className="text-[10px] font-bold text-neutral-500 dark:text-slate-400 uppercase tracking-widest">Support Agent</span>
                         </div>
                       </div>
                     </td>
                     <td className="px-8 py-6">
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-text-primary">
+                        <span className="text-sm font-bold text-slate-900 dark:text-white">
                           {new Date(ticket.slaDeadline).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                         </span>
                         <div className="flex items-center gap-1.5 mt-1">
                           <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-                          <span className="text-[10px] text-red-600 font-extrabold uppercase tracking-widest">2h 15m remaining</span>
+                          <span className="text-[10px] text-red-600 dark:text-red-400 font-extrabold uppercase tracking-widest">2h 15m remaining</span>
                         </div>
                       </div>
                     </td>
                     <td className="px-8 py-6 text-right">
                       <button 
                         onClick={() => navigate(`/tickets/${ticket.id}`)}
-                        className="p-3 bg-white border border-border-color text-text-secondary rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:border-blue-500 hover:text-blue-600 hover:shadow-lg shadow-sm"
+                        className="p-3 bg-white dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 text-neutral-500 dark:text-slate-400 rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md shadow-sm"
                       >
                         <HiOutlineAdjustmentsHorizontal className="w-6 h-6" />
                       </button>

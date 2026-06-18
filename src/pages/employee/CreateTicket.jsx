@@ -146,7 +146,7 @@ const CreateTicket = () => {
           <div className="card card-3d shadow-xl shadow-slate-200/50">
             <form onSubmit={handleSubmit} className="p-8 space-y-8">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-text-primary uppercase tracking-wider flex items-center gap-2">
+                <label className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
                   <HiOutlineDocumentText className="w-4 h-4 text-blue-500" />
                   Issue Summary
                 </label>
@@ -163,12 +163,12 @@ const CreateTicket = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-primary uppercase tracking-wider">Category</label>
+                  <label className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Category</label>
                   <select 
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
-                    className="input py-4 dark:bg-slate-900"
+                    className="input py-4"
                   >
                     {Object.values(TICKET_CATEGORIES).map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
@@ -176,12 +176,12 @@ const CreateTicket = () => {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-text-primary uppercase tracking-wider">Priority</label>
+                  <label className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Priority</label>
                   <select 
                     name="priority"
                     value={formData.priority}
                     onChange={handleChange}
-                    className="input py-4 dark:bg-slate-900"
+                    className="input py-4"
                   >
                     {Object.values(TICKET_PRIORITIES).map(prio => (
                       <option key={prio} value={prio}>{prio}</option>

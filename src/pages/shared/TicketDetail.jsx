@@ -90,9 +90,9 @@ const TicketDetail = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <button 
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-all font-bold text-sm uppercase tracking-widest group"
+          className="flex items-center gap-2 text-neutral-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all font-bold text-sm uppercase tracking-widest group"
         >
-          <div className="p-2 bg-white rounded-xl border border-border-color group-hover:border-blue-500 group-hover:text-blue-600 transition-all">
+          <div className="p-2 bg-white dark:bg-slate-800 rounded-xl border border-neutral-200 dark:border-slate-700 group-hover:border-blue-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-all">
             <HiOutlineArrowLeft className="w-5 h-5" />
           </div>
           Back to list
@@ -109,7 +109,7 @@ const TicketDetail = () => {
               </button>
               <button 
                 onClick={() => handleUpdateStatus('Resolved')}
-                className="btn-primary flex items-center gap-2 py-2 px-6 text-sm bg-green-600 hover:bg-green-700 shadow-green-600/20"
+                className="btn-primary flex items-center gap-2 py-2 px-6 text-sm bg-green-600 hover:bg-green-700 shadow-md"
               >
                 <HiOutlineCheckCircle className="w-5 h-5" />
                 Resolve Ticket
@@ -122,40 +122,40 @@ const TicketDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           {/* Main Ticket Info */}
-          <div className="card shadow-xl shadow-slate-200/50">
+          <div className="card shadow-md">
             <div className="p-8 md:p-10">
               <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-xs font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100 uppercase tracking-widest">
+                    <span className="font-mono text-xs font-black text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 rounded-lg border border-blue-100 dark:border-blue-900/30 uppercase tracking-widest">
                       {ticket.id}
                     </span>
                     <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${STATUS_COLORS[ticket.status]?.bg} ${STATUS_COLORS[ticket.status]?.text} border border-current/10`}>
                       {ticket.status}
                     </span>
                   </div>
-                  <h1 className="text-3xl font-black text-text-primary tracking-tight leading-tight">
+                  <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                     {ticket.title}
                   </h1>
                 </div>
                 <div className="flex flex-col items-end">
-                  <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] ${PRIORITY_COLORS[ticket.priority]?.bg} ${PRIORITY_COLORS[ticket.priority]?.text} shadow-lg shadow-current/10`}>
+                  <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] ${PRIORITY_COLORS[ticket.priority]?.bg} ${PRIORITY_COLORS[ticket.priority]?.text} shadow-md`}>
                     {ticket.priority} Priority
                   </span>
                 </div>
               </div>
 
-              <div className="prose dark:prose-invert max-w-none text-text-primary text-lg leading-relaxed mb-10">
+              <div className="prose dark:prose-invert max-w-none text-slate-900 dark:text-white text-lg leading-relaxed mb-10">
                 <p className="whitespace-pre-wrap">{ticket.description}</p>
               </div>
 
               {ticket.attachments?.length > 0 && (
-                <div className="pt-8 border-t border-border-color">
-                  <h4 className="text-xs font-black text-text-secondary uppercase tracking-[0.2em] mb-4">Supporting Documents</h4>
+                <div className="pt-8 border-t border-neutral-200 dark:border-slate-700">
+                  <h4 className="text-xs font-black text-neutral-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-4">Supporting Documents</h4>
                   <div className="flex flex-wrap gap-4">
                     {ticket.attachments.map((file, idx) => (
-                      <div key={idx} className="flex items-center gap-3 px-4 py-3 bg-bg-secondary border border-border-color rounded-2xl text-sm font-bold text-text-primary hover:border-blue-500 hover:text-blue-600 cursor-pointer transition-all group">
-                        <HiOutlinePaperClip className="w-5 h-5 text-text-secondary group-hover:text-blue-500 transition-colors" />
+                      <div key={idx} className="flex items-center gap-3 px-4 py-3 bg-neutral-50 dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 rounded-2xl text-sm font-bold text-slate-900 dark:text-white hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer transition-all group">
+                        <HiOutlinePaperClip className="w-5 h-5 text-neutral-500 dark:text-slate-400 group-hover:text-blue-500 transition-colors" />
                         {file}
                       </div>
                     ))}
@@ -166,36 +166,36 @@ const TicketDetail = () => {
           </div>
 
           {/* Activity/Comments */}
-          <div className="card shadow-xl shadow-slate-200/50">
-            <div className="p-6 border-b border-border-color bg-bg-secondary/30 flex items-center justify-between">
-              <h3 className="font-black text-text-primary uppercase tracking-widest text-xs flex items-center gap-2">
+          <div className="card shadow-md">
+            <div className="p-6 border-b border-neutral-200 dark:border-slate-700 bg-neutral-50/30 dark:bg-slate-900/30 flex items-center justify-between">
+              <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-widest text-xs flex items-center gap-2">
                 <HiOutlineChatBubbleLeftRight className="w-5 h-5 text-blue-500" />
                 Communication History
               </h3>
-              <span className="text-[10px] font-bold text-text-secondary uppercase bg-white px-2 py-1 rounded-lg border border-border-color">
+              <span className="text-[10px] font-bold text-neutral-500 dark:text-slate-400 uppercase bg-white dark:bg-slate-800 px-2 py-1 rounded-lg border border-neutral-200 dark:border-slate-700">
                 {ticket.comments.length} Messages
               </span>
             </div>
             
-            <div className="p-8 space-y-8 max-h-[600px] overflow-y-auto bg-slate-50/30">
+            <div className="p-8 space-y-8 max-h-[600px] overflow-y-auto bg-neutral-50/30 dark:bg-slate-900/20">
               {ticket.comments.map((comment) => (
                 <div key={comment.id} className={`flex gap-4 ${comment.userId === user.id ? 'flex-row-reverse' : ''}`}>
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black uppercase shrink-0 text-sm shadow-sm ${
-                    comment.userId === user.id ? 'bg-blue-600 text-white' : 'bg-white border border-border-color text-blue-700'
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black uppercase shrink-0 text-sm shadow-md ${
+                    comment.userId === user.id ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 text-blue-700 dark:text-blue-400'
                   }`}>
                     {comment.userName.charAt(0)}
                   </div>
                   <div className={`max-w-[80%] space-y-2 ${comment.userId === user.id ? 'items-end' : ''}`}>
                     <div className="flex items-center gap-3 px-1">
-                      <span className="text-xs font-black text-text-primary">{comment.userName}</span>
-                      <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">
+                      <span className="text-xs font-black text-slate-900 dark:text-white">{comment.userName}</span>
+                      <span className="text-[10px] font-bold text-neutral-500 dark:text-slate-400 uppercase tracking-widest">
                         {new Date(comment.createdAt).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
                     <div className={`p-5 rounded-[2rem] text-base leading-relaxed shadow-sm ${
                       comment.userId === user.id 
                         ? 'bg-blue-600 text-white rounded-tr-none' 
-                        : 'bg-white border border-border-color text-text-primary rounded-tl-none'
+                        : 'bg-white dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-tl-none'
                     }`}>
                       {comment.text}
                     </div>
@@ -204,21 +204,21 @@ const TicketDetail = () => {
               ))}
             </div>
 
-            <div className="p-6 border-t border-border-color bg-white">
+            <div className="p-6 border-t border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800">
               <form onSubmit={handleAddComment} className="flex gap-4">
                 <div className="flex-grow relative">
                   <textarea 
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Type your response here..."
-                    className="input-field py-4 min-h-[100px] resize-none pr-12"
+                    className="input py-4 min-h-[100px] resize-none pr-12"
                   ></textarea>
                 </div>
                 <div className="flex flex-col justify-end">
                   <button 
                     type="submit"
                     disabled={isSubmitting || !comment.trim()}
-                    className="btn-primary py-4 px-8 shadow-xl shadow-blue-600/30"
+                    className="btn-primary py-4 px-8 shadow-md"
                   >
                     {isSubmitting ? (
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -232,8 +232,8 @@ const TicketDetail = () => {
 
         {/* Sidebar Info */}
         <div className="space-y-8">
-          <div className="card p-8 shadow-xl shadow-slate-200/50">
-            <h3 className="text-xs font-black text-text-secondary uppercase tracking-[0.2em] mb-8 border-b border-border-color pb-4">
+          <div className="card p-8 shadow-md">
+            <h3 className="text-xs font-black text-neutral-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-8 border-b border-neutral-200 dark:border-slate-700 pb-4">
               Ticket Overview
             </h3>
             <div className="space-y-6">
@@ -242,15 +242,15 @@ const TicketDetail = () => {
               <DetailRow icon={HiOutlineCalendar} label="Created" value={new Date(ticket.createdAt).toLocaleDateString()} />
               <DetailRow icon={HiOutlineClock} label="SLA Deadline" value={new Date(ticket.slaDeadline).toLocaleString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' })} />
               
-              <div className="pt-6 border-t border-border-color">
-                <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-4">Assigned Agent</p>
-                <div className="flex items-center gap-4 p-4 bg-bg-secondary rounded-2xl border border-border-color/50">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-border-color flex items-center justify-center text-blue-600 font-black shadow-sm">
+              <div className="pt-6 border-t border-neutral-200 dark:border-slate-700">
+                <p className="text-[10px] font-black text-neutral-500 dark:text-slate-400 uppercase tracking-widest mb-4">Assigned Agent</p>
+                <div className="flex items-center gap-4 p-4 bg-neutral-50 dark:bg-slate-800 rounded-2xl border border-neutral-200/50 dark:border-slate-700/50">
+                  <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 font-black shadow-sm">
                     {ticket.assignedTo?.charAt(0) || '?'}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-text-primary">{ticket.assignedTo || 'Unassigned'}</p>
-                    <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Support Specialist</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{ticket.assignedTo || 'Unassigned'}</p>
+                    <p className="text-[10px] font-bold text-neutral-500 dark:text-slate-400 uppercase tracking-widest">Support Specialist</p>
                   </div>
                 </div>
               </div>
@@ -258,7 +258,7 @@ const TicketDetail = () => {
           </div>
 
           {isAgentOrManager && (
-            <div className="card bg-slate-900 text-white border-none shadow-2xl shadow-slate-900/40 p-8 relative overflow-hidden group">
+            <div className="card bg-slate-900 text-white border-none shadow-2xl p-8 relative overflow-hidden group">
               <div className="absolute -right-10 -top-10 w-40 h-40 bg-blue-600/20 rounded-full blur-[80px] group-hover:bg-blue-500/30 transition-all duration-700"></div>
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-8">
@@ -276,20 +276,20 @@ const TicketDetail = () => {
             </div>
           )}
 
-          <div className="card p-8 shadow-xl shadow-slate-200/50">
-            <h3 className="text-xs font-black text-text-secondary uppercase tracking-[0.2em] mb-8 border-b border-border-color pb-4">
+          <div className="card p-8 shadow-md">
+            <h3 className="text-xs font-black text-neutral-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-8 border-b border-neutral-200 dark:border-slate-700 pb-4">
               Audit Timeline
             </h3>
             <div className="space-y-8">
               {ticket.timeline.map((event, idx) => (
                 <div key={idx} className="flex gap-4 relative">
                   {idx !== ticket.timeline.length - 1 && (
-                    <div className="absolute left-[9px] top-6 bottom-[-32px] w-0.5 bg-slate-100"></div>
+                    <div className="absolute left-[9px] top-6 bottom-[-32px] w-0.5 bg-neutral-100 dark:bg-slate-800"></div>
                   )}
-                  <div className="w-5 h-5 rounded-full bg-white border-4 border-blue-500 z-10 shrink-0 shadow-sm"></div>
+                  <div className="w-5 h-5 rounded-full bg-white dark:bg-slate-800 border-4 border-blue-500 z-10 shrink-0 shadow-sm"></div>
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-text-primary leading-none">{event.action}</p>
-                    <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white leading-none">{event.action}</p>
+                    <p className="text-[10px] font-bold text-neutral-500 dark:text-slate-400 uppercase tracking-widest">
                       {event.by} • {new Date(event.at).toLocaleDateString()}
                     </p>
                   </div>
@@ -305,12 +305,12 @@ const TicketDetail = () => {
 
 const DetailRow = ({ icon: Icon, label, value }) => (
   <div className="flex items-start gap-4">
-    <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
-      <Icon className="w-4 h-4 text-slate-400" />
+    <div className="p-2 bg-neutral-50 dark:bg-slate-800 rounded-lg border border-neutral-200 dark:border-slate-700">
+      <Icon className="w-4 h-4 text-neutral-500 dark:text-slate-400" />
     </div>
     <div>
-      <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest leading-none mb-1">{label}</p>
-      <p className="text-sm font-bold text-text-primary">{value}</p>
+      <p className="text-[10px] font-black text-neutral-500 dark:text-slate-400 uppercase tracking-widest leading-none mb-1">{label}</p>
+      <p className="text-sm font-bold text-slate-900 dark:text-white">{value}</p>
     </div>
   </div>
 );

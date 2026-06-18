@@ -43,8 +43,8 @@ const AgentDashboard = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-text-primary">Agent Dashboard</h1>
-        <p className="text-text-secondary">Welcome back, {user?.name}. Here's your performance overview.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Agent Dashboard</h1>
+        <p className="text-neutral-500 dark:text-slate-400">Welcome back, {user?.name}. Here's your performance overview.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -75,8 +75,8 @@ const AgentDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-bg-card rounded-2xl p-6 border border-border-color shadow-sm">
-          <h3 className="text-lg font-bold text-text-primary mb-6">Ticket Volume Trend</h3>
+        <div className="lg:col-span-2 card p-6">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Ticket Volume Trend</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={stats?.ticketsByMonth}>
@@ -98,16 +98,16 @@ const AgentDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-bg-card rounded-2xl p-6 border border-border-color shadow-sm">
-          <h3 className="text-lg font-bold text-text-primary mb-6">Recent Activity</h3>
+        <div className="card p-6">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Recent Activity</h3>
           <div className="space-y-6">
             {stats?.recentActivity?.slice(0, 6).map((activity, idx) => (
               <div key={idx} className="flex gap-4">
                 <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0"></div>
                 <div>
-                  <p className="text-sm font-semibold text-text-primary">{activity.action}</p>
-                  <p className="text-xs text-text-secondary mb-1">{activity.detail}</p>
-                  <p className="text-[10px] text-text-secondary uppercase font-bold">{activity.time}</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">{activity.action}</p>
+                  <p className="text-xs text-neutral-500 dark:text-slate-400 mb-1">{activity.detail}</p>
+                  <p className="text-[10px] text-neutral-500 dark:text-slate-400 uppercase font-bold">{activity.time}</p>
                 </div>
               </div>
             ))}
@@ -120,20 +120,20 @@ const AgentDashboard = () => {
 
 const StatCard = ({ title, value, icon: Icon, color }) => {
   const colors = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
-    amber: 'bg-amber-50 text-amber-600',
-    purple: 'bg-purple-50 text-purple-600',
+    blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
+    green: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
+    amber: 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400',
+    purple: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
   };
 
   return (
-    <div className="bg-bg-card p-6 rounded-2xl border border-border-color shadow-sm flex items-center gap-4">
+    <div className="card p-6 flex items-center gap-4">
       <div className={`p-4 rounded-xl ${colors[color]}`}>
         <Icon className="w-6 h-6" />
       </div>
       <div>
-        <p className="text-sm text-text-secondary font-medium">{title}</p>
-        <p className="text-2xl font-bold text-text-primary">{value}</p>
+        <p className="text-sm text-neutral-500 dark:text-slate-400 font-medium">{title}</p>
+        <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
       </div>
     </div>
   );
