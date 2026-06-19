@@ -604,4 +604,26 @@ const AdminStatCard = ({ title, value, icon: Icon, color, description }) => {
   );
 };
 
+const AdminStatCard = ({ title, value, icon: Icon, color, description }) => {
+  const colors = {
+    blue: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900/30',
+    green: 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900/30',
+    amber: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900/30',
+    purple: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-900/30',
+  };
+
+  return (
+    <div className={`card p-6 border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all ${colors[color]}`}>
+      <div className="flex items-center gap-3 mb-3">
+        <div className={`p-2.5 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700`}>
+          <Icon className="w-5 h-5" />
+        </div>
+        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">{description}</span>
+      </div>
+      <p className="text-xs font-bold uppercase tracking-[0.2em] mb-1 text-slate-600 dark:text-slate-400">{title}</p>
+      <p className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">{value}</p>
+    </div>
+  );
+};
+
 export default Dashboard;
