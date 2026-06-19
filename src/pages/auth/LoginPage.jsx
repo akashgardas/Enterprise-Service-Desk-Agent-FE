@@ -28,8 +28,14 @@ const LoginPage = () => {
     e.preventDefault();
     setError('');
     
-    // Validate email if provided (not using role-based login)
-    if (email && isGmail(email)) {
+    // Always validate email is provided
+    if (!email.trim()) {
+      setError('Please enter your email address.');
+      return;
+    }
+
+    // Check for Gmail addresses
+    if (isGmail(email)) {
       setError('Gmail addresses are not allowed. Please use your company email address.');
       return;
     }
@@ -115,7 +121,7 @@ const LoginPage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     className={`input pl-12 py-3 ${email && isGmail(email) ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20' : ''}`}
                     placeholder="name@company.com"
-                    required={!selectedRole}
+                    required
                   />
                 </div>
                 {email && isGmail(email) && (

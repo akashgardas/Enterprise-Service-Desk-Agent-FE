@@ -1,6 +1,7 @@
 import api, { mockResponse } from './api';
-import { mockTickets, getNextTicketId } from '../mock/mockData';
+import { mockTickets, getNextTicketId, mockUsers } from '../mock/mockData';
 import { USE_MOCK } from '../config/constants';
+import notificationService from './notificationService';
 
 const ticketService = {
   getTickets: async (filters = {}) => {
@@ -75,6 +76,20 @@ const ticketService = {
         slaDeadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // Default 24h SLA
       };
       mockTickets.unshift(newTicket);
+
+      // Create notification for agents/admins about new ticket!
+      // Find all agent/admin users
+      mockUsers.forEach(user => {
+        if (['admin', 'agent', 'manager'].includes(user.role.toLowerCase())) {
+          notificationService.createNotification({
+            userId: user.id,
+            message: `New ticket created: ${newTicket.title} (${newTicket.id})`,
+            type: 'ticket',
+            ticketId: newTicket.id
+          });
+        }
+      });
+
       return mockResponse(newTicket);
     }
     return api.post('/tickets', ticketData);
@@ -96,18 +111,55 @@ const ticketService = {
     if (USE_MOCK) {
       const index = mockTickets.findIndex(t => t.id === id);
       if (index !== -1) {
+        const ticket = mockTickets[index];
         const newComment = {
           id: `c${Date.now()}`,
           ...comment,
           createdAt: new Date().toISOString()
         };
-        mockTickets[index].comments.push(newComment);
-        mockTickets[index].updatedAt = new Date().toISOString();
+        ticket.comments.push(newComment);
+        ticket.updatedAt = new Date().toISOString();
+
+        // Create notifications for other people involved in the ticket!
+        // Notify ticket creator and agents!
+        // First, get all users who need to know!
+        const notifiedUsers = new Set();
+        if (ticket.createdBy) notifiedUsers.add(ticket.createdBy);
+        if (ticket.assignedTo) notifiedUsers.add(ticket.assignedTo);
+        notifiedUsers.delete(comment.userId); // Don't notify the sender!
+        // Also notify all admins/agents/managers just in case!
+        mockUsers.forEach(user => {
+          if (['admin', 'agent', 'manager'].includes(user.role.toLowerCase())) {
+            notifiedUsers.add(user.id);
+          }
+        });
+
+        notifiedUsers.forEach(userId => {
+          notificationService.createNotification({
+            userId,
+            message: `New message on ticket ${ticket.id}: ${comment.text.substring(0, 50)}...`,
+            type: 'comment',
+            ticketId: ticket.id
+          });
+        });
+
         return mockResponse(newComment);
       }
       throw new Error('Ticket not found');
     }
     return api.post(`/tickets/${id}/comments`, comment);
+  },
+
+  deleteTicket: async (id) => {
+    if (USE_MOCK) {
+      const index = mockTickets.findIndex(t => t.id === id);
+      if (index !== -1) {
+        mockTickets.splice(index, 1);
+        return mockResponse({ success: true });
+      }
+      throw new Error('Ticket not found');
+    }
+    return api.delete(`/tickets/${id}`);
   }
 };
 

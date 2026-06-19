@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import notificationService from '../../services/notificationService';
 import Loading from '../../components/common/Loading';
@@ -8,6 +9,7 @@ import { HiOutlineBell, HiOutlineCheckCircle, HiOutlineClock } from 'react-icons
 
 const NotificationList = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -72,7 +74,16 @@ const NotificationList = () => {
           <div 
             key={notification.id} 
             className={`p-6 border-b border-neutral-200 dark:border-slate-700 last:border-0 hover:bg-neutral-50 dark:hover:bg-slate-700 transition-colors cursor-pointer relative ${!notification.read ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}`}
-            onClick={() => !notification.read && handleMarkAsRead(notification.id)}
+            onClick={() => {
+              if (notification.ticketId) {
+                navigate(`/tickets/${notification.ticketId}`);
+              } else if (notification.articleId) {
+                navigate(`/kb/${notification.articleId}`);
+              }
+              if (!notification.read) {
+                handleMarkAsRead(notification.id);
+              }
+            }}
           >
             {!notification.read && (
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600"></div>

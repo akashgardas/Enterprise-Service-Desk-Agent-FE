@@ -31,6 +31,20 @@ const notificationService = {
       return mockResponse({ success: true });
     }
     return api.post('/notifications/read-all');
+  },
+
+  createNotification: async (notification) => {
+    if (USE_MOCK) {
+      const newNotification = {
+        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        read: false,
+        createdAt: new Date().toISOString(),
+        ...notification
+      };
+      mockNotifications.unshift(newNotification);
+      return mockResponse(newNotification);
+    }
+    return api.post('/notifications', notification);
   }
 };
 
