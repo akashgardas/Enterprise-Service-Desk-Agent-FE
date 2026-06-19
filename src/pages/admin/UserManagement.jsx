@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import userService from '../../services/userService';
 import Loading from '../../components/common/Loading';
 import EmptyState from '../../components/common/EmptyState';
@@ -19,6 +20,7 @@ import {
 } from 'react-icons/hi2';
 
 const UserManagement = () => {
+  const location = useLocation();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -30,8 +32,11 @@ const UserManagement = () => {
     email: '',
     phone: '',
     role: 'employee',
-    department: 'Engineering'
+    department: 'Engineering',
+    status: 'active'
   });
+  const [editingUser, setEditingUser] = useState(null);
+  const [deleteUserId, setDeleteUserId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
   const [showResetConfirm, setShowResetConfirm] = useState(null);
@@ -51,6 +56,39 @@ const UserManagement = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  const openCreateModal = () => {
+    setEditingUser(null);
+    setNewUser({
+      name: '',
+      email: '',
+      phone: '',
+      role: 'employee',
+      department: 'Engineering',
+      status: 'active'
+    });
+    setShowModal(true);
+  };
+
+  const openEditModal = (user) => {
+    setEditingUser(user);
+    setNewUser({
+      name: user.name,
+      email: user.email,
+      phone: user.phone || '',
+      role: user.role,
+      department: user.department || 'Engineering',
+      status: user.status || 'active'
+    });
+    setShowModal(true);
+  };
+
+  useEffect(() => {
+    if (location.state?.openProvisionModal) {
+      openCreateModal();
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(search.toLowerCase()) || 
@@ -77,6 +115,7 @@ const UserManagement = () => {
         setShowModal(null);
         setSelectedUser(null);
         setSuccess('');
+        setEditingUser(null);
       }, 2000);
     } catch (err) {
       console.error('Failed to save user', err);
@@ -390,11 +429,36 @@ const UserManagement = () => {
                             : 'border-slate-200 dark:border-slate-700'
                         }`}
                       >
-                        <p className="font-bold">{role}</p>
+                        {role}
                       </button>
                     ))}
                   </div>
                 </div>
+
+                {editingUser && (
+                  <div className="space-y-1.5 md:col-span-2">
+                    <label className="text-xs font-bold text-neutral-600 dark:text-slate-400 uppercase tracking-wider">Account Status</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { value: 'active', label: 'Active', color: 'border-green-600 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' },
+                        { value: 'inactive', label: 'Inactive', color: 'border-red-600 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400' }
+                      ].map(statusOption => (
+                        <button
+                          key={statusOption.value}
+                          type="button"
+                          onClick={() => setNewUser({ ...newUser, status: statusOption.value })}
+                          className={`py-2.5 px-3 rounded-xl border-2 text-center font-bold text-xs transition-all ${
+                            newUser.status === statusOption.value 
+                              ? statusOption.color
+                              : 'border-neutral-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
+                          }`}
+                        >
+                          {statusOption.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-4 pt-4">
