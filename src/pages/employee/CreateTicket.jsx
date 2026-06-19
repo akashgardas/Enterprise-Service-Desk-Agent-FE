@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../components/common/Toast';
 import ticketService from '../../services/ticketService';
 import { TICKET_CATEGORIES, TICKET_PRIORITIES } from '../../config/constants';
 import { 
@@ -15,6 +16,7 @@ import {
 const CreateTicket = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -110,10 +112,12 @@ const CreateTicket = () => {
         department: user?.department || 'General Support',
         // attachments: uploadedFiles.map(f => f.file), // You would need to handle FormData for actual upload
       });
+      addToast('Ticket created successfully!', 'success');
       localStorage.removeItem('ticket_draft');
       navigate('/tickets');
     } catch (err) {
       console.error('Failed to create ticket', err);
+      addToast('Failed to create ticket', 'error');
     } finally {
       setLoading(false);
     }

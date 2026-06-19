@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './components/common/Toast';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
 import { ROLES } from './config/constants';
@@ -11,6 +12,7 @@ import PasswordReset from './pages/auth/PasswordReset';
 import Dashboard from './pages/shared/Dashboard';
 import EmployeeTicketList from './pages/employee/TicketList';
 import CreateTicket from './pages/employee/CreateTicket';
+import TicketEditor from './pages/employee/TicketEditor';
 import AgentDashboard from './pages/agent/AgentDashboard';
 import AgentTicketQueue from './pages/agent/AgentTicketQueue';
 import TeamOverview from './pages/manager/TeamOverview';
@@ -48,6 +50,7 @@ const AppRoutes = () => {
         } />
         <Route path="tickets/new" element={<CreateTicket />} />
         <Route path="tickets/:id" element={<TicketDetail />} />
+        <Route path="tickets/:id/edit" element={<TicketEditor />} />
 
         {/* Knowledge Base */}
         <Route path="kb" element={<ArticleList />} />
@@ -109,9 +112,11 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <ToastProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </ToastProvider>
     </AuthProvider>
   );
 };

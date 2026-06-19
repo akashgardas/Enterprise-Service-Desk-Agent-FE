@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ticketService from '../../services/ticketService';
 import Loading from '../../components/common/Loading';
 import EmptyState from '../../components/common/EmptyState';
-import { HiOutlineMagnifyingGlass, HiOutlineFunnel, HiOutlineAdjustmentsHorizontal, HiOutlineUserCircle } from 'react-icons/hi2';
+import { HiOutlineMagnifyingGlass, HiOutlineFunnel, HiOutlineAdjustmentsHorizontal, HiOutlineUserCircle, HiOutlinePencil, HiOutlineTrash, HiOutlineEye } from 'react-icons/hi2';
 import { STATUS_COLORS, PRIORITY_COLORS, TICKET_CATEGORIES } from '../../config/constants';
 
 const AgentTicketQueue = () => {
@@ -16,6 +16,17 @@ const AgentTicketQueue = () => {
     category: '',
     search: ''
   });
+
+  const handleDelete = async (ticketId) => {
+    if (window.confirm('Are you sure you want to delete this ticket?')) {
+      try {
+        await ticketService.deleteTicket(ticketId);
+        setTickets(prev => prev.filter(t => t.id !== ticketId));
+      } catch (err) {
+        console.error('Failed to delete ticket', err);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchAllTickets = async () => {
@@ -179,12 +190,29 @@ const AgentTicketQueue = () => {
                       </div>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <button 
-                        onClick={() => navigate(`/tickets/${ticket.id}`)}
-                        className="p-3 bg-white dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 text-neutral-500 dark:text-slate-400 rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md shadow-sm"
-                      >
-                        <HiOutlineAdjustmentsHorizontal className="w-6 h-6" />
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <button 
+                          onClick={() => navigate(`/tickets/${ticket.id}`)}
+                          className="p-2 bg-white dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-xl hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 hover:shadow-md shadow-sm transition-all"
+                          title="View Details"
+                        >
+                          <HiOutlineEye className="w-5 h-5" />
+                        </button>
+                        <button 
+                          onClick={() => navigate(`/tickets/${ticket.id}/edit`)}
+                          className="p-2 bg-white dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-xl hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 hover:shadow-md shadow-sm transition-all"
+                          title="Edit Ticket"
+                        >
+                          <HiOutlinePencil className="w-5 h-5" />
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(ticket.id)}
+                          className="p-2 bg-white dark:bg-slate-800 border border-neutral-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-xl hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 hover:shadow-md shadow-sm transition-all"
+                          title="Delete Ticket"
+                        >
+                          <HiOutlineTrash className="w-5 h-5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

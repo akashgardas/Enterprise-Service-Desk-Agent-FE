@@ -5,7 +5,7 @@ import ticketService from '../../services/ticketService';
 import Loading from '../../components/common/Loading';
 import EmptyState from '../../components/common/EmptyState';
 import ErrorState from '../../components/common/ErrorState';
-import { HiOutlinePlus, HiOutlineMagnifyingGlass, HiOutlineFunnel, HiOutlineTicket } from 'react-icons/hi2';
+import { HiOutlinePlus, HiOutlineMagnifyingGlass, HiOutlineFunnel, HiOutlineTicket, HiOutlinePencil, HiOutlineTrash, HiOutlineEye } from 'react-icons/hi2';
 import { STATUS_COLORS, PRIORITY_COLORS } from '../../config/constants';
 
 const EmployeeTicketList = () => {
@@ -27,6 +27,17 @@ const EmployeeTicketList = () => {
       setError('Failed to load your tickets');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (ticketId) => {
+    if (window.confirm('Are you sure you want to delete this ticket?')) {
+      try {
+        await ticketService.deleteTicket(ticketId);
+        setTickets(prev => prev.filter(t => t.id !== ticketId));
+      } catch (err) {
+        console.error('Failed to delete ticket', err);
+      }
     }
   };
 
@@ -152,12 +163,29 @@ const EmployeeTicketList = () => {
                       </div>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <button 
-                        onClick={() => navigate(`/tickets/${ticket.id}`)}
-                        className="text-blue-600 dark:text-blue-400 font-bold hover:text-blue-700 dark:hover:text-blue-300 text-sm hover:underline transition-all"
-                      >
-                        View Details
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <button 
+                          onClick={() => navigate(`/tickets/${ticket.id}`)}
+                          className="p-2 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-all"
+                          title="View Details"
+                        >
+                          <HiOutlineEye className="w-5 h-5" />
+                        </button>
+                        <button 
+                          onClick={() => navigate(`/tickets/${ticket.id}/edit`)}
+                          className="p-2 text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-xl transition-all"
+                          title="Edit Ticket"
+                        >
+                          <HiOutlinePencil className="w-5 h-5" />
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(ticket.id)}
+                          className="p-2 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all"
+                          title="Delete Ticket"
+                        >
+                          <HiOutlineTrash className="w-5 h-5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

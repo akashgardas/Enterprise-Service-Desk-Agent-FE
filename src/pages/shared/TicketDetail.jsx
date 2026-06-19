@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../components/common/Toast';
 import ticketService from '../../services/ticketService';
 import Loading from '../../components/common/Loading';
 import ErrorState from '../../components/common/ErrorState';
@@ -23,6 +24,7 @@ const TicketDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, hasRole } = useAuth();
+  const { addToast } = useToast();
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -58,13 +60,13 @@ const TicketDetail = () => {
         text: comment,
       };
       await ticketService.addComment(id, newComment);
-      setTicket(prev => ({
-        ...prev,
-        comments: [...prev.comments, { ...newComment, id: Date.now(), createdAt: new Date().toISOString() }]
-      }));
+      addToast("Message is sent", "success");
+      // Refresh the ticket to get the updated data (no duplicates!)
+      fetchTicket();
       setComment('');
     } catch (err) {
       console.error('Failed to add comment', err);
+      addToast("Failed to send message", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -315,12 +317,18 @@ const DetailRow = ({ icon: Icon, label, value }) => (
   </div>
 );
 
-const AIActionButton = ({ label }) => (
-  <button className="w-full py-3 px-5 bg-white/5 hover:bg-white/10 rounded-2xl text-sm font-bold text-left border border-white/10 transition-all active:scale-[0.98] flex items-center justify-between group">
-    {label}
-    <HiOutlineArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0" />
-  </button>
-);
+const AIActionButton = ({ label }) => {
+  const navigate = useNavigate();
+  return (
+    <button 
+      onClick={() => navigate('/ai')}
+      className="w-full py-3 px-5 bg-white/5 hover:bg-white/10 rounded-2xl text-sm font-bold text-left border border-white/10 transition-all active:scale-[0.98] flex items-center justify-between group cursor-pointer"
+    >
+      {label}
+      <HiOutlineArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0" />
+    </button>
+  );
+};
 
 const HiOutlineArrowRight = (props) => (
   <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
