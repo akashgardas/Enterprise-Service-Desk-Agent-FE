@@ -157,7 +157,8 @@
     "yallist": "^3.1.1",
     "yocto-queue": "^0.1.0",
     "zod": "^4.4.3",
-    "zod-validation-error": "^4.0.2"
+    "zod-validation-error": "^4.0.2",
+    "@supabase/supabase-js": "^2.43.0"
   },
   "optionalDependencies": {
     "lightningcss-win32-x64-msvc": "^1.32.0",
